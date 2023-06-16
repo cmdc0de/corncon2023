@@ -70,7 +70,6 @@ libesp::ScalingBuffer FrameBuf(&Display, MyApp::FRAME_BUFFER_WIDTH, MyApp::FRAME
     ,MyApp::DISPLAY_HEIGHT, PARALLEL_LINES, (uint8_t*)&BackBuffer[0],(uint8_t*)&ParallelLinesBuffer[0]);
 
 static GUI MyGui(&Display);
-static libesp::SoftwareShiftRegister SSR;
 
 WiFiMenu MyWiFiMenu;
 
@@ -84,10 +83,8 @@ const char *MyErrorMap::toString(int32_t err) {
 MyApp MyApp::mSelf;
 static MyApp::BtnManagerType::ButtonInfo SButtonInfo[] = {
   {PIN_NUM_DOWN_BTN,true}
-  ,{PIN_NUM_JUMP_BTN,true}
+  ,{PIN_NUM_UP_BTN,true}
   ,{PIN_NUM_FIRE_BTN,true}
-  ,{PIN_NUM_LEFT_BTN,true}
-  ,{PIN_NUM_RIGHT_BTN,true}
   ,{PIN_NUM_UP_BTN,true}
 };
 
@@ -179,13 +176,6 @@ libesp::ErrorType MyApp::onInit() {
 
    ButtonMgr.init(&SButtonInfo[0],true);
 
-	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-
-   et = SSR.init(PIN_NUM_LED_CLK,PIN_NUM_LED_SERIAL,PIN_NUM_LED_OUTPUT_EN,true,PIN_NUM_LED_STROBE,true,true);
-   if(!et.ok()) {
-      ESP_LOGI(LOGTAG,"Failed to init software serial register");
-   }
-   SSR.start();
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
   //initFS();
@@ -299,8 +289,6 @@ ErrorType MyApp::onRun() {
     switch(CurrentMode) {
     case ONE:
       {
-         SSR.enableOutput();
-         setLEDs(MyApp::LEDS::ALL_ON);
          CurrentMode = TWO;
       }
       break;
@@ -311,7 +299,7 @@ ErrorType MyApp::onRun() {
       break;
     case THREE:
       {
-         setLEDs(MyApp::LEDS::ALL_OFF);
+        // setLEDs(MyApp::LEDS::ALL_OFF);
         CurrentMode = FOUR;
       }
       break;
@@ -346,10 +334,6 @@ libesp::TFTDisplay &MyApp::getDisplay() {
 
 libesp::GUI &MyApp::getGUI() {
 	return MyGui;
-}
-
-void MyApp::setLEDs(MyApp::LEDS l) {
-   SSR.enqueueData(l,6);
 }
 
 MenuState MyMenuState;

@@ -287,6 +287,7 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
                }
             }
             break;
+            /*
             case PIN_NUM_LEFT_BTN:
             {
                switch(State) {
@@ -310,6 +311,7 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
                }
                break;
             }
+            */
             case PIN_NUM_JUMP_BTN:
             {
                switch(State) {

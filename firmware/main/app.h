@@ -97,7 +97,6 @@ public:
 	static MyApp &get();
 public:
 	virtual ~MyApp();
-   void setLEDs(MyApp::LEDS l);
 	uint16_t getCanvasWidth();
 	uint16_t getCanvasHeight();
 	uint16_t getLastCanvasWidthPixel();

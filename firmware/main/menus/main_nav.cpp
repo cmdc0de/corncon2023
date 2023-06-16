@@ -64,6 +64,7 @@ BaseMenu::ReturnStateContext MainNav::onRun() {
                break;
             case PIN_NUM_FIRE_BTN:
                break;
+               /*
             case PIN_NUM_LEFT_BTN:
                newPos.setX(AvatarPos.getX()-1);
                if(newPos.getX()>4 && newPos.getX()<105) arrayPos = -2;
@@ -72,6 +73,7 @@ BaseMenu::ReturnStateContext MainNav::onRun() {
                newPos.setX(AvatarPos.getX()+1);
                if(newPos.getX()>4 && newPos.getX()<105) arrayPos = -2;
                break;
+               */
             default:
                break;
          }

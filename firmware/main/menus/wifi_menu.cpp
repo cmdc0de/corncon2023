@@ -171,6 +171,7 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
          case PIN_NUM_RIGHT_BTN:
             VB.moveRight();
             break;
+            /*
          case PIN_NUM_JUMP_BTN:
             if(WiFiPassword[0]!='\0') {
                WiFiPassword[Position] = '\0';
@@ -191,6 +192,7 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
                      , "Max Name Length reached, wifi config saved ", 2000);
             }
             break;
+            */
          default:
             break;
       }

@@ -294,6 +294,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
                   MenuList.moveDown();
                }
                break;
+               /*
             case PIN_NUM_LEFT_BTN:
                if(ENTER_PCODE==IState) {
                   VB.moveLeft();
@@ -304,6 +305,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
                   VB.moveRight();
                }
                break;
+               */
             default:
                break;
          }
@@ -317,7 +319,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
          break;
       case SEND_INITIAL_PAIR: 
          {
-            MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONE);
+            //MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONE);
 	         MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
             ErrorType et = this->pair1();
             if(et.ok()) {
@@ -333,11 +335,11 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
          break;
       case AWAITING_OTHER_BADGE: 
          {
-            MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONETWO);
+            //MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONETWO);
             uint32_t now = libesp::FreeRTOS::getTimeSinceStart();
             ErrorType et = status(now);
             if(et.ok()) {
-               MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONETWOTHREE);
+               //MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONETWOTHREE);
                nextState = MyApp::get().getDisplayMessageState(MyApp::get().getMenuState()
                     , "Pair Successful", 2000);
             } else if(et.getErrT()==ErrorType::TIMEOUT_ERROR) {
@@ -353,16 +355,16 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
          break;
       case ENTER_PCODE:
          {
-            MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONE);
+            //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONE);
             sprintf(getRow(1),"     %s", &PCode[0]);
          }
          break;
       case SEND_PAIR2:
          {
-            MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONETWO);
+            //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONETWO);
             ErrorType et = pair2();
             if(et.ok()) {
-               MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONETWOTHREE);
+               //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONETWOTHREE);
                nextState = MyApp::get().getDisplayMessageState(MyApp::get().getMenuState()
                     , "Pair Successful", 2000);
             } else {
@@ -381,7 +383,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
 
 ErrorType PairMenu::onShutdown() {
 	MyApp::get().getButtonMgr().removeObserver(QueueHandle);
-   MyApp::get().setLEDs(MyApp::LEDS::ALL_OFF);
+   //MyApp::get().setLEDs(MyApp::LEDS::ALL_OFF);
 	return ErrorType();
 }
 

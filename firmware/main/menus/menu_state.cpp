@@ -33,7 +33,7 @@ MenuState::~MenuState() {
 }
 
 ErrorType MenuState::onInit() {
-   MyApp::get().setLEDs(MyApp::LEDS::ALL_OFF);
+   //MyApp::get().setLEDs(MyApp::LEDS::ALL_OFF);
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
    Items[0].id = 0;
 	if (MyApp::get().getConfig().isNameSet()) {
@@ -74,9 +74,9 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
 	if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       if(bme->wasReleased()) {
          switch(bme->getButton()) {
-            case PIN_NUM_FIRE_BTN:
-               wasFireBtnReleased = true;
-            break;
+            //case PIN_NUM_FIRE_BTN:
+            //   wasFireBtnReleased = true;
+            //break;
             case PIN_NUM_UP_BTN:
                MenuList.moveUp();
             break;
