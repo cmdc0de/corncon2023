@@ -17,6 +17,7 @@
 #include <device/display/fonts.h>
 #include <device/display/gui.h>
 #include <device/touch/XPT2046.h>
+#include "hal/gpio_types.h"
 #include "menus/menu_state.h"
 #include "menus/game_of_life.h"
 #include "menus/setting_menu.h"
@@ -82,10 +83,11 @@ const char *MyErrorMap::toString(int32_t err) {
 
 MyApp MyApp::mSelf;
 static MyApp::BtnManagerType::ButtonInfo SButtonInfo[] = {
-  {PIN_NUM_DOWN_BTN,true}
-  ,{PIN_NUM_UP_BTN,true}
-  ,{PIN_NUM_FIRE_BTN,true}
-  ,{PIN_NUM_UP_BTN,true}
+  {PIN_NUM_BTN_1,false}
+  ,{PIN_NUM_BTN_2,false}
+  ,{PIN_NUM_BTN_3,false}
+  ,{PIN_NUM_BTN_4,false}
+  ,{PIN_NUM_BTN_5,false}
 };
 
 MyApp &MyApp::get() {
@@ -159,6 +161,39 @@ libesp::ErrorType MyApp::onInit() {
 	ErrorType et;
 
    ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
+
+   //init leds
+   //zero-initialize the config structure.
+   ESP_LOGI(LOGTAG,"config gpio for leds");
+   gpio_config_t io_conf = {};
+   //disable interrupt
+   io_conf.intr_type = GPIO_INTR_DISABLE;
+   //set as output mode
+   io_conf.mode = GPIO_MODE_OUTPUT;
+   //bit mask of the pins that you want to set,e.g.GPIO18/19
+   io_conf.pin_bit_mask = (1ULL<<PIN_NUM_LED_1) | (1ULL<<PIN_NUM_LED_2) | (1ULL<<PIN_NUM_LED_3) | (1ULL<<PIN_NUM_LED_4) | (1ULL << PIN_NUM_LED_5);
+    //disable pull-down mode
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    //disable pull-up mode
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    //configure GPIO with the given settings
+   gpio_config(&io_conf);
+   ESP_LOGI(LOGTAG,"***************turn on leds");
+   int32_t ledState = 1;
+   for(int i=0;i<4;++i) {
+      gpio_set_level(PIN_NUM_LED_1,ledState);
+		vTaskDelay(500 / portTICK_RATE_MS);
+      gpio_set_level(PIN_NUM_LED_2,ledState);
+		vTaskDelay(500 / portTICK_RATE_MS);
+      gpio_set_level(PIN_NUM_LED_3,ledState);
+		vTaskDelay(500 / portTICK_RATE_MS);
+      gpio_set_level(PIN_NUM_LED_4,ledState);
+		vTaskDelay(500 / portTICK_RATE_MS);
+      gpio_set_level(PIN_NUM_LED_5,ledState);
+      vTaskDelay(500 / portTICK_RATE_MS);
+      ledState = ledState == 1 ? 0: 1;
+   }
+   //
 
    CCOTA.init(UPDATE_URL);
    CCOTA.logCurrentActiveParitionInfo();
@@ -236,7 +271,7 @@ libesp::ErrorType MyApp::onInit() {
 		vTaskDelay(500 / portTICK_RATE_MS);
 		Display.drawRec(0,50,FRAME_BUFFER_WIDTH/2,10, libesp::RGBColor::GREEN);
 		Display.drawString(15,70,"Color Validation.",libesp::RGBColor::RED);
-		Display.drawString(30,85,"CornCorn '22",libesp::RGBColor::BLUE, libesp::RGBColor::WHITE,1,false);
+		Display.drawString(30,85,"CornCorn '23",libesp::RGBColor::BLUE, libesp::RGBColor::WHITE,1,false);
 		Display.swap();
 
 		vTaskDelay(1000 / portTICK_RATE_MS);
@@ -247,14 +282,15 @@ libesp::ErrorType MyApp::onInit() {
 
 	ESP_LOGI(LOGTAG,"After Touch Task starts: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
-   MyWiFiMenu.initWiFi();
-   if(getConfig().hasWiFiBeenSetup().ok()) {
-      et = MyWiFiMenu.connect();
-  		setCurrentMenu(getMenuState());
-   } else {
+   //MyWiFiMenu.initWiFi();
+   //if(getConfig().hasWiFiBeenSetup().ok()) {
+    //  et = MyWiFiMenu.connect();
+  //		setCurrentMenu(getMenuState());
+   //} else {
       ESP_LOGI(LOGTAG,"Wifi config not set");
-      setCurrentMenu(getMenuState());
-   }
+      //setCurrentMenu(getMenuState());
+      setCurrentMenu(getBadgeTest());
+   //}
 
    return et;
 }

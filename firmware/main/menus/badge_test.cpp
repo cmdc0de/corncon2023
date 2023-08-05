@@ -39,18 +39,18 @@ ErrorType BadgeTest::onInit() {
    sprintf(getRow(1),"Fire: %s", OFF);
    sprintf(getRow(2),"Up: %s", OFF);
    sprintf(getRow(3),"Down: %s", OFF);
-   sprintf(getRow(4),"Right: %s", OFF);
-   sprintf(getRow(5),"Left: %s", OFF);
-   sprintf(getRow(6),"Lights: %s", NOLEDS);
+   //sprintf(getRow(4),"Right: %s", OFF);
+   //sprintf(getRow(5),"Left: %s", OFF);
+   //sprintf(getRow(6),"Lights: %s", NOLEDS);
    sprintf(getRow(7),"Version: %s", MyApp::get().getOTA().getCurrentApplicationVersion());
    sprintf(getRow(8),"Build Date: %s", MyApp::get().getOTA().getBuildDate());
 //   sprintf(getRow(9),"Build Time: %s", MyApp::get().getOTA().getBuildTime());
-   sprintf(getRow(9),"BK:%s BL:%s R:%s",MyApp::get().getConfig().isPariedWithColor(BadgeColor::BLACK)?"Y":"N"
-         , MyApp::get().getConfig().isPariedWithColor(BadgeColor::BLUE)?"Y":"N"
-         , MyApp::get().getConfig().isPariedWithColor(BadgeColor::RED)?"Y":"N");
-   sprintf(getRow(10)," G:%s  P:%s W:%s",MyApp::get().getConfig().isPariedWithColor(BadgeColor::GREEN)?"Y":"N"
-         , MyApp::get().getConfig().isPariedWithColor(BadgeColor::PURPLE)?"Y":"N"
-         , MyApp::get().getConfig().isPariedWithColor(BadgeColor::WHITE)?"Y":"N");
+   //sprintf(getRow(9),"BK:%s BL:%s R:%s",MyApp::get().getConfig().isPariedWithColor(BadgeColor::BLACK)?"Y":"N"
+    //     , MyApp::get().getConfig().isPariedWithColor(BadgeColor::BLUE)?"Y":"N"
+    //     , MyApp::get().getConfig().isPariedWithColor(BadgeColor::RED)?"Y":"N");
+   //sprintf(getRow(10)," G:%s  P:%s W:%s",MyApp::get().getConfig().isPariedWithColor(BadgeColor::GREEN)?"Y":"N"
+    //     , MyApp::get().getConfig().isPariedWithColor(BadgeColor::PURPLE)?"Y":"N"
+     //    , MyApp::get().getConfig().isPariedWithColor(BadgeColor::WHITE)?"Y":"N");
    MyApp::get().getGUI().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
 	return ErrorType();
@@ -63,60 +63,33 @@ libesp::BaseMenu::ReturnStateContext BadgeTest::onRun() {
    ButtonManagerEvent *bme = nullptr;
 	if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       switch(bme->getButton()) {
-         /*
-      case PIN_NUM_FIRE_BTN:
-         if(bme->wasReleased()) sprintf(getRow(1),"Fire: %s", OFF);
-         else sprintf(getRow(1),"Fire: %s", ON);
-         //MyApp::get().setLEDs(MyApp::LEDS::LEFT_ONE);
-         sprintf(getRow(6),"Lights: %s", "OXX XXX");
-         wasEscCount = 0;
-         break;
-         */
       case PIN_NUM_UP_BTN:
-         if(bme->wasReleased()) sprintf(getRow(2),"Up: %s", OFF);
-         else sprintf(getRow(2),"Up: %s", ON);
+         if(bme->wasReleased()) sprintf(getRow(0),"Up: %s", OFF);
+         else sprintf(getRow(0),"Up: %s", ON);
          //MyApp::get().setLEDs(MyApp::LEDS::LEFT_TWO);
-         sprintf(getRow(6),"Lights: %s", "XOX XXX");
          wasEscCount = 0;
          break;
       case PIN_NUM_DOWN_BTN:
-         if(bme->wasReleased()) sprintf(getRow(3),"Down: %s", OFF);
-         else sprintf(getRow(3),"Down: %s", ON);
+         if(bme->wasReleased()) sprintf(getRow(1),"Down: %s", OFF);
+         else sprintf(getRow(1),"Down: %s", ON);
          //MyApp::get().setLEDs(MyApp::LEDS::LEFT_THREE);
-         sprintf(getRow(6),"Lights: %s", "XXO XXX");
          wasEscCount = 0;
          break;
       case PIN_NUM_LEFT_BTN:
-         if(bme->wasReleased()) sprintf(getRow(5),"Left: %s", OFF);
-         else sprintf(getRow(5),"Left: %s", ON);
+         if(bme->wasReleased()) sprintf(getRow(2),"Left: %s", OFF);
+         else sprintf(getRow(2),"Left: %s", ON);
          //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_ONE);
-         sprintf(getRow(6),"Lights: %s", "XXX OXX");
          wasEscCount = 0;
          break;
       case PIN_NUM_RIGHT_BTN:
          if(bme->wasReleased()) {
-            sprintf(getRow(4),"Right: %s", OFF);
+            sprintf(getRow(3),"Right: %s", OFF);
             wasEscCount = 0;
          } else {
-            sprintf(getRow(4),"Right: %s", ON);
+            sprintf(getRow(3),"Right: %s", ON);
             ++wasEscCount;
          }
-         //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_TWO);
-         sprintf(getRow(6),"Lights: %s", "XXX XOX");
          break;
-         /*
-      case PIN_NUM_JUMP_BTN:
-         if(bme->wasReleased()) {
-            sprintf(getRow(0),"Jump: %s", OFF);
-            wasEscCount = 0;
-         } else {
-            sprintf(getRow(0),"Jump: %s", ON);
-            ++wasEscCount;
-         }
-         //MyApp::get().setLEDs(MyApp::LEDS::RIGHT_THREE);
-         sprintf(getRow(6),"Lights: %s", "XXX XXO");
-         break;
-         */
       default:
          break;
       }

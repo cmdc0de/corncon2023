@@ -77,7 +77,7 @@ public:
     , FOUR
   };
 public:
-   typedef typename libesp::ButtonManager<12,2,6,2> BtnManagerType;
+   typedef typename libesp::ButtonManager<12,2,5,2> BtnManagerType;
 	static const char *LOGTAG;
 	static const char *MENUHEADER;
 	static const int QUEUE_SIZE = 10;
@@ -87,10 +87,10 @@ public:
 	static const uint32_t TIME_BETWEEN_PULSES = 200;
 	static const uint32_t TIME_BETWEEN_WIFI_CONNECTS = 60000;
   //1.8" TFT
-	static const uint16_t DISPLAY_HEIGHT		= 128;
-	static const uint16_t DISPLAY_WIDTH			= 160;
-	static const uint16_t FRAME_BUFFER_HEIGHT	= 128;
-	static const uint16_t FRAME_BUFFER_WIDTH	= 160;
+	static const uint16_t DISPLAY_HEIGHT		= 64;
+	static const uint16_t DISPLAY_WIDTH			= 128;
+	static const uint16_t FRAME_BUFFER_HEIGHT	= 64;
+	static const uint16_t FRAME_BUFFER_WIDTH	= 128;
 
 	static const uint32_t ESP_INTR_FLAG_DEFAULT= 0;
 
