@@ -209,9 +209,6 @@ libesp::ErrorType MyApp::onInit() {
 	
    ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
-   ButtonMgr.init(&SButtonInfo[0],true);
-
-	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
   //initFS();
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
@@ -282,6 +279,13 @@ libesp::ErrorType MyApp::onInit() {
 
 	ESP_LOGI(LOGTAG,"After Touch Task starts: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
+   ButtonMgr.init(&SButtonInfo[0],true);
+	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
+   int debug = gpio_get_level(PIN_NUM_BTN_2);
+   ESP_LOGI(LOGTAG,"button state %d",debug);
+   gpio_set_level(PIN_NUM_BTN_2, 0);
+   debug = gpio_get_level(PIN_NUM_BTN_2);
+   ESP_LOGI(LOGTAG,"button state %d",debug);
    //MyWiFiMenu.initWiFi();
    //if(getConfig().hasWiFiBeenSetup().ok()) {
     //  et = MyWiFiMenu.connect();

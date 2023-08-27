@@ -4,7 +4,7 @@
 #include <system.h>
 
 #define PIN_NUM_BTN_1				GPIO_NUM_23
-#define PIN_NUM_BTN_2				GPIO_NUM_35
+#define PIN_NUM_BTN_2				GPIO_NUM_26
 #define PIN_NUM_BTN_3				GPIO_NUM_32
 #define PIN_NUM_BTN_4				GPIO_NUM_33
 #define PIN_NUM_BTN_5				GPIO_NUM_25
