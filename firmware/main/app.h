@@ -7,8 +7,9 @@
 #ifndef CORNCON22_APP_H
 #define CORNCON22_APP_H
 
-#include "device/display/display_device.h"
-#include "error_type.h"
+#include <device/display/GC9A01.h>
+#include <device/display/display.h>
+#include <error_type.h>
 #include <app/app.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/queue.h>
@@ -31,11 +32,9 @@ class Menu3D;
 class SettingMenu;
 class BadgeTest;
 class MainNav;
-class Pacman;
 class WiFiMenu;
 class ConnectionDetails;
 class UpdateMenu;
-class HighScore;
 class PairMenu;
 class SleepMenu;
 
@@ -86,11 +85,11 @@ public:
 	static const char *sNO;
 	static const uint32_t TIME_BETWEEN_PULSES = 200;
 	static const uint32_t TIME_BETWEEN_WIFI_CONNECTS = 60000;
-  //1.8" TFT
-	static const uint16_t DISPLAY_HEIGHT		= 64;
-	static const uint16_t DISPLAY_WIDTH			= 128;
-	static const uint16_t FRAME_BUFFER_HEIGHT	= 64;
-	static const uint16_t FRAME_BUFFER_WIDTH	= 128;
+
+	static const uint16_t DISPLAY_HEIGHT		= 240;
+	static const uint16_t DISPLAY_WIDTH			= 240;
+	static const uint16_t FRAME_BUFFER_HEIGHT	= 240;
+	static const uint16_t FRAME_BUFFER_WIDTH	= 240;
 
 	static const uint32_t ESP_INTR_FLAG_DEFAULT= 0;
 
@@ -101,7 +100,7 @@ public:
 	uint16_t getCanvasHeight();
 	uint16_t getLastCanvasWidthPixel();
 	uint16_t getLastCanvasHeightPixel();
-	libesp::TFTDisplay &getDisplay();
+	libesp::Display<libesp::GC9A01> &getDisplay();
 	libesp::GUI &getGUI();
 	MenuState *getMenuState();
 	SettingMenu *getSettingMenu();
@@ -112,7 +111,6 @@ public:
    WiFiMenu *getWiFiMenu();
    ConnectionDetails *getConnectionDetailMenu();
    UpdateMenu *getUpdateMenu();
-   HighScore *getHighScores();
    PairMenu *getPairMenu();
    libesp::OTA &getOTA();
    SleepMenu *getSleepMenu();

@@ -97,7 +97,7 @@ ErrorType SettingMenu::onInit() {
    Items[7].text = getRow(7);
 
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
-   MyApp::get().getGUI().drawList(&this->MenuList);
+  // MyApp::get().getGUI().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(QueueHandle);
    State = INIT;
 	return ErrorType();
@@ -376,16 +376,16 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
       }
       delete bme;
    }
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   //MyApp::get().getGUI().drawList(&this->MenuList);
    if(State!=INIT && State!=ENTER_BOOL && State!=ENTER_TZ) {
-      VB.draw(MyApp::get().getDisplay(),50, 100);
+      //VB.draw(MyApp::get().getDisplay(),50, 100);
    }
 
 	return ReturnStateContext(nextState);
 }
 
 ErrorType SettingMenu::onShutdown() {
-	MyApp::get().getButtonMgr().removeObserver(QueueHandle);
+	//MyApp::get().getButtonMgr().removeObserver(QueueHandle);
 	return ErrorType();
 }
 

@@ -376,7 +376,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
    }
    MyApp::get().getGUI().drawList(&this->MenuList);
    if(IState==ENTER_PCODE) {
-      VB.draw(MyApp::get().getDisplay(),50,100);
+      //VB.draw(MyApp::get().getDisplay(),50,100);
    }
 	return ReturnStateContext(nextState);
 }

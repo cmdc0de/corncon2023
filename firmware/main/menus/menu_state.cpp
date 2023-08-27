@@ -10,7 +10,7 @@
 #include "main_nav.h"
 #include "wifi_menu.h"
 #include "connection_details.h"
-#include "high_score.h"
+//#include "high_score.h"
 #include "pair.h"
 #include "menu3d.h"
 #include "sleep_menu.h"
@@ -62,7 +62,7 @@ ErrorType MenuState::onInit() {
    Items[9].text = "Pair";
    Items[10].id = 10;
    Items[10].text = "Sleep";
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   //MyApp::get().getGUI().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
 	return ErrorType();
 }
@@ -113,7 +113,7 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
          //nextState = MyApp::get().getInvaders();
          break;
       case 5:
-         nextState = MyApp::get().getHighScores();
+         //nextState = MyApp::get().getHighScores();
          break;
       case 6:
          nextState = MyApp::get().getWiFiMenu();
@@ -137,7 +137,7 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
    if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)";
    else Items[6].text = (const char *) "WiFi (NOT Connected)";
     
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   //MyApp::get().getGUI().drawList(&this->MenuList);
 	return BaseMenu::ReturnStateContext(nextState);
 }
 

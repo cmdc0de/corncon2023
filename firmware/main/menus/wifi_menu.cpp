@@ -96,7 +96,7 @@ BaseMenu* WiFiMenu::scan() {
          snprintf(getRow(i),AppBaseMenu::RowLength,"%-15.14s  %4d  %3d"
          , ScanResults[i].getSSID().c_str(), ScanResults[i].getRSSI(), ScanResults[i].getPrimary());
       }
-      MyApp::get().getGUI().drawList(&MenuList);
+      //MyApp::get().getGUI().drawList(&MenuList);
       InternalState = SCAN_RESULTS;
    } else {
       nextState = MyApp::get().getDisplayMessageState(MyApp::get().getMenuState()
@@ -137,15 +137,15 @@ BaseMenu* WiFiMenu::processScanList(ButtonManagerEvent *bme) {
       switch(bme->getButton()) {
          case PIN_NUM_UP_BTN:
             MenuList.moveUp();
-            MyApp::get().getGUI().drawList(&MenuList);
+            //MyApp::get().getGUI().drawList(&MenuList);
          break;
          case PIN_NUM_DOWN_BTN:
             MenuList.moveDown();
-            MyApp::get().getGUI().drawList(&MenuList);
+            //MyApp::get().getGUI().drawList(&MenuList);
          break;
          case PIN_NUM_FIRE_BTN:
             displaySingleSid();
-            VB.draw(MyApp::get().getDisplay(),50, 80);
+            //VB.draw(MyApp::get().getDisplay(),50, 80);
          break;
          case PIN_NUM_JUMP_BTN:
             nextState = MyApp::get().getMenuState();
@@ -197,7 +197,7 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
             break;
       }
    }
-   VB.draw(MyApp::get().getDisplay(),50, 80);
+   //VB.draw(MyApp::get().getDisplay(),50, 80);
    char rowBuffer[80];
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Pwd: %s", &WiFiPassword[0]);
    MyApp::get().getDisplay().drawString(5,60,&rowBuffer[0],RGBColor::WHITE);

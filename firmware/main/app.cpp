@@ -12,12 +12,15 @@
 
 #include <driver/uart.h>
 #include <driver/gpio.h>
-#include <device/display/frame_buffer.h>
-#include <device/display/display_device.h>
 #include <device/display/fonts.h>
-#include <device/display/gui.h>
 #include <device/touch/XPT2046.h>
+#include <device/display/GC9A01.h>
+#include "device/display/basic_back_buffer.h"
+#include "device/display/color.h"
+#include "device/display/display_types.h"
+#include <device/display/display.h>
 #include "hal/gpio_types.h"
+#include "hal/spi_types.h"
 #include "menus/menu_state.h"
 #include "menus/game_of_life.h"
 #include "menus/setting_menu.h"
@@ -37,7 +40,6 @@
 #include "menus/connection_details.h"
 #include <net/ota.h>
 #include "menus/update_menu.h"
-#include "menus/high_score.h"
 #include "menus/pair.h"
 #include "menus/sleep_menu.h"
 #include <esp_partition.h>
@@ -47,7 +49,7 @@ using libesp::System;
 using libesp::FreeRTOS;
 using libesp::RGBColor;
 using libesp::SPIBus;
-using libesp::TFTDisplay;
+using libesp::Display;
 using libesp::GUI;
 using libesp::DisplayMessageState;
 using libesp::BaseMenu;
@@ -57,24 +59,23 @@ const char *MyApp::LOGTAG = "AppTask";
 const char *MyApp::sYES = "Yes";
 const char *MyApp::sNO = "No";
 
-#define START_ROT libesp::TFTDisplay::LANDSCAPE_TOP_LEFT
-static const uint16_t PARALLEL_LINES = 8;
-
-libesp::TFTDisplay Display(MyApp::DISPLAY_WIDTH,MyApp::DISPLAY_HEIGHT,START_ROT, PIN_NUM_DISPLAY_BACKLIGHT, PIN_NUM_DISPLAY_RESET, TFTDisplay::DISPLAY_TYPE::ST7735R);
-
 static uint16_t BkBuffer[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT];
+//static uint16_t *BkBuffer = new uint16_t[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT*2];
 static uint16_t *BackBuffer = &BkBuffer[0];
 
-uint16_t ParallelLinesBuffer[MyApp::DISPLAY_WIDTH*PARALLEL_LINES] = {0};
+libesp::BasicBackBuffer FrameBuf(MyApp::FRAME_BUFFER_WIDTH, MyApp::FRAME_BUFFER_HEIGHT, uint8_t(16)
+      , (uint8_t *)&BkBuffer[0], MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT*2
+      , libesp::LIB_PIXEL_FORMAT::FORMAT_16_BIT);
 
-libesp::ScalingBuffer FrameBuf(&Display, MyApp::FRAME_BUFFER_WIDTH, MyApp::FRAME_BUFFER_HEIGHT, uint8_t(16), MyApp::DISPLAY_WIDTH
-    ,MyApp::DISPLAY_HEIGHT, PARALLEL_LINES, (uint8_t*)&BackBuffer[0],(uint8_t*)&ParallelLinesBuffer[0]);
 
-static GUI MyGui(&Display);
+libesp::GC9A01 MyDisplayType(libesp::LANDSCAPE_BOTTOM_LEFT);
+
+libesp::Display<libesp::GC9A01> MyDisplay;
 
 WiFiMenu MyWiFiMenu;
+GUI MyGui(0);
 
-const char *UPDATE_URL = "https://s3.us-west-2.amazonaws.com/online.corncon.badge/2022/corncon22.bin";
+const char *UPDATE_URL = "https://s3.us-west-2.amazonaws.com/online.corncon.badge/2023/corncon22.bin";
 libesp::OTA CCOTA;
 
 const char *MyErrorMap::toString(int32_t err) {
@@ -147,13 +148,13 @@ ErrorType MyApp::initFS() {
 
 void MyApp::goToSleep() {
    AmISleep = true;
-   getDisplay().setBackLightOn(false);
+   getDisplay().setBacklight(0);
    getWiFiMenu()->disconnect();
 }
 
 void MyApp::wakeUp() {
    AmISleep = false;
-   getDisplay().setBackLightOn(true);
+   getDisplay().setBacklight(100);
    getWiFiMenu()->connect();
 }
 
@@ -235,41 +236,42 @@ libesp::ErrorType MyApp::onInit() {
       ESP_LOGI(LOGTAG,"failed to init config store");
    }
 
-  //this will init the SPI bus and the display
-  TFTDisplay::initDisplay(PIN_NUM_DISPLAY_MISO, PIN_NUM_DISPLAY_MOSI,
-    PIN_NUM_DISPLAY_SCK, SPI_DMA_CH2, PIN_NUM_DISPLAY_DATA_CMD, PIN_NUM_DISPLAY_RESET,
-    PIN_NUM_DISPLAY_BACKLIGHT, SPI3_HOST);
+   et = libesp::GC9A01::spiInit(PIN_NUM_DISPLAY_MOSI, PIN_NUM_DISPLAY_MISO, PIN_NUM_DISPLAY_SCK, 1, SPI3_HOST);
 
-  ESP_LOGI(LOGTAG,"After Display: Free: %u, Min %u", System::get().getFreeHeapSize()
-    ,System::get().getMinimumFreeHeapSize());
+   if(!et.ok()) {
+      ESP_LOGE(LOGTAG,"Failed to init SPI bus for display");
+   }
+  
+   SPIBus *hbus = libesp::SPIBus::get(SPI3_HOST);
 
-  SPIBus *hbus = libesp::SPIBus::get(SPI3_HOST);
+   et = MyDisplayType.init(hbus, PIN_NUM_DISPLAY_CS, PIN_NUM_DISPLAY_DATA_CMD, PIN_NUM_DISPLAY_RESET
+         , PIN_NUM_DISPLAY_BACKLIGHT, &FrameBuf, nullptr);
 
-	FrameBuf.createInitDevice(hbus,PIN_NUM_DISPLAY_CS,PIN_NUM_DISPLAY_DATA_CMD);//, DisplayTouchSemaphore);
-	
-	ESP_LOGI(LOGTAG,"After FrameBuf: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
+   if(!et.ok()) {
+      ESP_LOGE(LOGTAG,"Failed to init SPI bus for display");
+   }
 
-	ESP_LOGI(LOGTAG,"start display init");
-	et=Display.init(libesp::TFTDisplay::FORMAT_16_BIT, &Font_6x10, &FrameBuf);
+   et = MyDisplay.init(&MyDisplayType, &FrameBuf, &Font_6x10, RGBColor::WHITE, RGBColor::BLACK);
+
+   ESP_LOGI(LOGTAG,"After Display: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
   if(et.ok()) {
 		ESP_LOGI(LOGTAG,"display init OK");
-		Display.fillScreen(libesp::RGBColor::BLACK);
-		Display.swap();
+		getDisplay().fillScreen(libesp::RGBColor::BLACK);
+		getDisplay().swap();
 		ESP_LOGI(LOGTAG,"fill black done");
-		Display.fillRec(0,0,FRAME_BUFFER_WIDTH/4,10,libesp::RGBColor::RED);
-		Display.swap();
+		getDisplay().fillRec(0,60,FRAME_BUFFER_WIDTH/4,10,libesp::RGBColor::RED);
+		getDisplay().swap();
 		vTaskDelay(500 / portTICK_RATE_MS);
-		Display.fillRec(0,15,FRAME_BUFFER_WIDTH/2,10,libesp::RGBColor::WHITE);
-		Display.swap();
+		getDisplay().fillRec(0,80,FRAME_BUFFER_WIDTH/2,10,libesp::RGBColor::WHITE);
+		getDisplay().swap();
 		vTaskDelay(500 / portTICK_RATE_MS);
-		Display.fillRec(0,30,FRAME_BUFFER_WIDTH-2,10,libesp::RGBColor::BLUE);
-		Display.swap();
+		getDisplay().fillRec(0,110,FRAME_BUFFER_WIDTH-2,10,libesp::RGBColor::BLUE);
+		getDisplay().swap();
 		vTaskDelay(500 / portTICK_RATE_MS);
-		Display.drawRec(0,50,FRAME_BUFFER_WIDTH/2,10, libesp::RGBColor::GREEN);
-		Display.drawString(15,70,"Color Validation.",libesp::RGBColor::RED);
-		Display.drawString(30,85,"CornCorn '23",libesp::RGBColor::BLUE, libesp::RGBColor::WHITE,1,false);
-		Display.swap();
+		getDisplay().drawString(100,120,"Color Validation.",libesp::RGBColor::RED);
+		getDisplay().drawString(100,130,"CornCorn '23",libesp::RGBColor::BLUE, libesp::RGBColor::WHITE,1,false);
+		getDisplay().swap();
 
 		vTaskDelay(1000 / portTICK_RATE_MS);
 		ESP_LOGI(LOGTAG,"After Display swap:Free: %u, Min %u",System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
@@ -281,11 +283,7 @@ libesp::ErrorType MyApp::onInit() {
 
    ButtonMgr.init(&SButtonInfo[0],true);
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-   int debug = gpio_get_level(PIN_NUM_BTN_2);
-   ESP_LOGI(LOGTAG,"button state %d",debug);
-   gpio_set_level(PIN_NUM_BTN_2, 0);
-   debug = gpio_get_level(PIN_NUM_BTN_2);
-   ESP_LOGI(LOGTAG,"button state %d",debug);
+	vTaskDelay(10000 / portTICK_RATE_MS);
    //MyWiFiMenu.initWiFi();
    //if(getConfig().hasWiFiBeenSetup().ok()) {
     //  et = MyWiFiMenu.connect();
@@ -304,7 +302,7 @@ ErrorType MyApp::onRun() {
    ButtonMgr.poll(); //move away from poll 
    int32_t interactionCount = ButtonMgr.broadcast();
    libesp::BaseMenu::ReturnStateContext rsc = getCurrentMenu()->run();
-	Display.swap();
+	getDisplay().swap();
    uint32_t now = FreeRTOS::getTimeSinceStart();
    if(LastInteractionTime==0 || interactionCount>0) {
       LastInteractionTime = now;
@@ -368,8 +366,8 @@ uint16_t MyApp::getLastCanvasHeightPixel() {
 	return getCanvasHeight()-1;
 }
 
-libesp::TFTDisplay &MyApp::getDisplay() {
-	return Display;
+libesp::Display<libesp::GC9A01> &MyApp::getDisplay() {
+   return MyDisplay;
 }
 
 libesp::GUI &MyApp::getGUI() {
@@ -385,7 +383,6 @@ BadgeTest BadgeTestMenu;
 MainNav MainNavMenu;
 ConnectionDetails MyConDetails;
 UpdateMenu MyUpdateMenu;
-HighScore MyHighScore;
 PairMenu MyPairMenu;
 SleepMenu MySleepMenu;
 
@@ -396,10 +393,6 @@ SleepMenu *MyApp::getSleepMenu() {
 
 PairMenu *MyApp::getPairMenu() {
    return &MyPairMenu;
-}
-
-HighScore *MyApp::getHighScores() {
-   return &MyHighScore;
 }
 
 UpdateMenu *MyApp::getUpdateMenu() {
@@ -454,7 +447,7 @@ DisplayMessageState *MyApp::getDisplayMessageState(BaseMenu *bm, const char *msg
 	DMS.setMessage(msg);
 	DMS.setNextState(bm);
 	DMS.setTimeInState(msDisplay);
-	DMS.setDisplay(&Display);
+	//DMS.setDisplay(&Display);
 	return &DMS;
 }
 
