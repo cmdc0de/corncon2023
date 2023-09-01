@@ -51,7 +51,7 @@ ErrorType BadgeTest::onInit() {
    //sprintf(getRow(10)," G:%s  P:%s W:%s",MyApp::get().getConfig().isPariedWithColor(BadgeColor::GREEN)?"Y":"N"
     //     , MyApp::get().getConfig().isPariedWithColor(BadgeColor::PURPLE)?"Y":"N"
      //    , MyApp::get().getConfig().isPariedWithColor(BadgeColor::WHITE)?"Y":"N");
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   //MyApp::get().getGUI().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
 	return ErrorType();
 }
@@ -100,7 +100,7 @@ libesp::BaseMenu::ReturnStateContext BadgeTest::onRun() {
       nextState = MyApp::get().getMenuState();
    }
 
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   //MyApp::get().getGUI().drawList(&this->MenuList);
 	return BaseMenu::ReturnStateContext(nextState);
 }
 

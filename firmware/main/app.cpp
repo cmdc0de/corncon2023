@@ -59,23 +59,23 @@ const char *MyApp::LOGTAG = "AppTask";
 const char *MyApp::sYES = "Yes";
 const char *MyApp::sNO = "No";
 
-static uint16_t BkBuffer[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT];
+uint16_t BkBuffer[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT];
 //static uint16_t *BkBuffer = new uint16_t[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT*2];
-static uint16_t *BackBuffer = &BkBuffer[0];
+uint16_t *BackBuffer = &BkBuffer[0];
 
 libesp::BasicBackBuffer FrameBuf(MyApp::FRAME_BUFFER_WIDTH, MyApp::FRAME_BUFFER_HEIGHT, uint8_t(16)
       , (uint8_t *)&BkBuffer[0], MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT*2
       , libesp::LIB_PIXEL_FORMAT::FORMAT_16_BIT);
 
 
-libesp::GC9A01 MyDisplayType(libesp::LANDSCAPE_BOTTOM_LEFT);
+libesp::GC9A01 MyDisplayType(libesp::PORTAIT_TOP_LEFT);
 
 libesp::Display<libesp::GC9A01> MyDisplay;
 
 WiFiMenu MyWiFiMenu;
 GUI MyGui(0);
 
-const char *UPDATE_URL = "https://s3.us-west-2.amazonaws.com/online.corncon.badge/2023/corncon22.bin";
+const char *UPDATE_URL = "https://s3.us-west-2.amazonaws.com/online.corncon.badge/2023/corncon23.bin";
 libesp::OTA CCOTA;
 
 const char *MyErrorMap::toString(int32_t err) {
@@ -181,7 +181,7 @@ libesp::ErrorType MyApp::onInit() {
    gpio_config(&io_conf);
    ESP_LOGI(LOGTAG,"***************turn on leds");
    int32_t ledState = 1;
-   for(int i=0;i<4;++i) {
+   for(int i=0;i<2;++i) {
       gpio_set_level(PIN_NUM_LED_1,ledState);
 		vTaskDelay(500 / portTICK_RATE_MS);
       gpio_set_level(PIN_NUM_LED_2,ledState);
@@ -252,6 +252,7 @@ libesp::ErrorType MyApp::onInit() {
    }
 
    et = MyDisplay.init(&MyDisplayType, &FrameBuf, &Font_6x10, RGBColor::WHITE, RGBColor::BLACK);
+   MyDisplay.setRotation(libesp::PORTAIT_TOP_LEFT);
 
    ESP_LOGI(LOGTAG,"After Display: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
 
@@ -259,22 +260,16 @@ libesp::ErrorType MyApp::onInit() {
 		ESP_LOGI(LOGTAG,"display init OK");
 		getDisplay().fillScreen(libesp::RGBColor::BLACK);
 		getDisplay().swap();
-		ESP_LOGI(LOGTAG,"fill black done");
-		getDisplay().fillRec(0,60,FRAME_BUFFER_WIDTH/4,10,libesp::RGBColor::RED);
+		ESP_LOGI(LOGTAG,"******************black");
+		vTaskDelay(2000 / portTICK_RATE_MS);
+      getDisplay().fillRec(40, 100, 180, 20, RGBColor::WHITE);
 		getDisplay().swap();
-		vTaskDelay(500 / portTICK_RATE_MS);
-		getDisplay().fillRec(0,80,FRAME_BUFFER_WIDTH/2,10,libesp::RGBColor::WHITE);
+		ESP_LOGI(LOGTAG,"******************rec done");
+		vTaskDelay(2000 / portTICK_RATE_MS);
+		getDisplay().drawString(60,80,"CornCorn '23",libesp::RGBColor::GREEN, libesp::RGBColor::BLACK,1,false);
 		getDisplay().swap();
-		vTaskDelay(500 / portTICK_RATE_MS);
-		getDisplay().fillRec(0,110,FRAME_BUFFER_WIDTH-2,10,libesp::RGBColor::BLUE);
-		getDisplay().swap();
-		vTaskDelay(500 / portTICK_RATE_MS);
-		getDisplay().drawString(100,120,"Color Validation.",libesp::RGBColor::RED);
-		getDisplay().drawString(100,130,"CornCorn '23",libesp::RGBColor::BLUE, libesp::RGBColor::WHITE,1,false);
-		getDisplay().swap();
-
-		vTaskDelay(1000 / portTICK_RATE_MS);
-		ESP_LOGI(LOGTAG,"After Display swap:Free: %u, Min %u",System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
+		ESP_LOGI(LOGTAG,"string");
+		vTaskDelay(2000 / portTICK_RATE_MS);
 	} else {
 		ESP_LOGE(LOGTAG,"failed display init");
 	}
@@ -283,7 +278,7 @@ libesp::ErrorType MyApp::onInit() {
 
    ButtonMgr.init(&SButtonInfo[0],true);
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-	vTaskDelay(10000 / portTICK_RATE_MS);
+	vTaskDelay(2000 / portTICK_RATE_MS);
    //MyWiFiMenu.initWiFi();
    //if(getConfig().hasWiFiBeenSetup().ok()) {
     //  et = MyWiFiMenu.connect();
@@ -431,12 +426,6 @@ BadgeTest *MyApp::getBadgeTest() {
 MainNav *MyApp::getMainNavMap() {
    return &MainNavMenu;
 }
-
-/*
-Pacman *MyApp::getPacman() {
-   return &PacmanMenu;
-}
-*/
 
 libesp::OTA &MyApp::getOTA() {
    return CCOTA;
