@@ -23,8 +23,8 @@ protected:
    libesp::ErrorType pair2();
 private:
 	QueueHandle_t QueueHandle;
-	libesp::GUIListData MenuList;
-	libesp::GUIListItemData Items[6];
+	libesp::DisplayGUIListData MenuList;
+	libesp::DisplayGUIListItemData Items[6];
    char PCode[28];
    bool Initiate;
    uint8_t Position;

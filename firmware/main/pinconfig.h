@@ -1,5 +1,4 @@
-#ifndef PINCONFIG_H
-#define PINCONFIG_H
+#pragma once 
 
 #include <system.h>
 
@@ -11,10 +10,9 @@
 
 #define PIN_NUM_UP_BTN           PIN_NUM_BTN_1
 #define PIN_NUM_DOWN_BTN         PIN_NUM_BTN_2
-#define PIN_NUM_FIRE_BTN         PIN_NUM_BTN_3
-#define PIN_NUM_JUMP_BTN         PIN_NUM_BTN_4
-#define PIN_NUM_LEFT_BTN         PIN_NUM_FIRE_BTN
-#define PIN_NUM_RIGHT_BTN        PIN_NUM_BTN_5
+#define PIN_NUM_LEFT_BTN         PIN_NUM_BTN_3
+#define PIN_NUM_RIGHT_BTN        PIN_NUM_BTN_4
+#define PIN_NUM_FIRE_BTN         PIN_NUM_BTN_5
 
 //display
 #define PIN_NUM_DISPLAY_DATA_CMD  		GPIO_NUM_5
@@ -33,4 +31,3 @@
 #define PIN_NUM_LED_5				GPIO_NUM_13
 
 
-#endif

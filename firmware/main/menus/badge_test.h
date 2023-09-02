@@ -1,7 +1,7 @@
 #pragma once
 
 #include "appbase_menu.h"
-#include <device/display/layout.h>
+#include <device/display/display_gui.h>
 
 class BadgeTest: public AppBaseMenu {
 public:
@@ -15,8 +15,8 @@ protected:
 	virtual libesp::BaseMenu::ReturnStateContext onRun();
 	virtual libesp::ErrorType onShutdown();
 private:
-	libesp::GUIListData MenuList;
-	libesp::GUIListItemData Items[11];
+	libesp::DisplayGUIListData MenuList;
+	libesp::DisplayGUIListItemData Items[10];
 	QueueHandle_t InternalQueueHandler;
 	static const uint16_t ItemCount = uint16_t(sizeof(Items) / sizeof(Items[0]));
 };

@@ -20,8 +20,8 @@ protected:
    libesp::ErrorType fetchScores();
 private:
 	QueueHandle_t QueueHandle;
-	libesp::GUIListData MenuList;
-	libesp::GUIListItemData Items[12];
+	libesp::DisplayGUIListData MenuList;
+	libesp::DisplayGUIListItemData Items[12];
 public:
 	static const int QUEUE_SIZE = 4;
 	static const int MSG_SIZE = sizeof(ButtonManagerEvent*);

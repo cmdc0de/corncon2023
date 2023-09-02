@@ -34,7 +34,6 @@
 #include <esp_spiffs.h>
 #include <device/shiftregister/software_shift.h>
 #include "appconfig.h"
-#include "menus/main_nav.h"
 #include "menus/badge_test.h"
 #include "menus/wifi_menu.h"
 #include "menus/connection_details.h"
@@ -50,7 +49,6 @@ using libesp::FreeRTOS;
 using libesp::RGBColor;
 using libesp::SPIBus;
 using libesp::Display;
-using libesp::GUI;
 using libesp::DisplayMessageState;
 using libesp::BaseMenu;
 using libesp::Point2Ds;
@@ -60,7 +58,6 @@ const char *MyApp::sYES = "Yes";
 const char *MyApp::sNO = "No";
 
 uint16_t BkBuffer[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT];
-//static uint16_t *BkBuffer = new uint16_t[MyApp::FRAME_BUFFER_WIDTH*MyApp::FRAME_BUFFER_HEIGHT*2];
 uint16_t *BackBuffer = &BkBuffer[0];
 
 libesp::BasicBackBuffer FrameBuf(MyApp::FRAME_BUFFER_WIDTH, MyApp::FRAME_BUFFER_HEIGHT, uint8_t(16)
@@ -73,7 +70,6 @@ libesp::GC9A01 MyDisplayType(libesp::PORTAIT_TOP_LEFT);
 libesp::Display<libesp::GC9A01> MyDisplay;
 
 WiFiMenu MyWiFiMenu;
-GUI MyGui(0);
 
 const char *UPDATE_URL = "https://s3.us-west-2.amazonaws.com/online.corncon.badge/2023/corncon23.bin";
 libesp::OTA CCOTA;
@@ -261,12 +257,28 @@ libesp::ErrorType MyApp::onInit() {
 		getDisplay().fillScreen(libesp::RGBColor::BLACK);
 		getDisplay().swap();
 		ESP_LOGI(LOGTAG,"******************black");
-		vTaskDelay(2000 / portTICK_RATE_MS);
-      getDisplay().fillRec(40, 100, 180, 20, RGBColor::WHITE);
+      for(int i=0;i<239;++i) {
+         getDisplay().drawHorizontalLine(0  , i, 239, RGBColor::WHITE);
+		   getDisplay().swap();
+      }
+      for(int i=238;i>=0;--i) {
+         getDisplay().drawHorizontalLine(0  , i, 239, RGBColor::RED);
+		   getDisplay().swap();
+      }
+		vTaskDelay(1000 / portTICK_RATE_MS);
+		getDisplay().fillScreen(libesp::RGBColor::BLACK);
 		getDisplay().swap();
-		ESP_LOGI(LOGTAG,"******************rec done");
+      getDisplay().fillRec(40, 100, 180, 20, RGBColor::GREEN);
+      getDisplay().fillRec(40, 130, 60, 20, RGBColor::BLUE);
+		getDisplay().swap();
+		ESP_LOGI(LOGTAG,"******************rec done do lines");
 		vTaskDelay(2000 / portTICK_RATE_MS);
-		getDisplay().drawString(60,80,"CornCorn '23",libesp::RGBColor::GREEN, libesp::RGBColor::BLACK,1,false);
+		getDisplay().fillScreen(libesp::RGBColor::BLACK);
+      getDisplay().drawVerticalLine(120,   0, 240, RGBColor::WHITE);
+      getDisplay().drawHorizontalLine(0  , 120, 240, RGBColor::WHITE);
+		getDisplay().swap();
+		vTaskDelay(2000 / portTICK_RATE_MS);
+		getDisplay().drawString(70,80,"CornCorn '23",libesp::RGBColor::GREEN, libesp::RGBColor::BLACK,1,false);
 		getDisplay().swap();
 		ESP_LOGI(LOGTAG,"string");
 		vTaskDelay(2000 / portTICK_RATE_MS);
@@ -274,11 +286,9 @@ libesp::ErrorType MyApp::onInit() {
 		ESP_LOGE(LOGTAG,"failed display init");
 	}
 
-	ESP_LOGI(LOGTAG,"After Touch Task starts: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-
    ButtonMgr.init(&SButtonInfo[0],true);
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-	vTaskDelay(2000 / portTICK_RATE_MS);
+	//vTaskDelay(2000 / portTICK_RATE_MS);
    //MyWiFiMenu.initWiFi();
    //if(getConfig().hasWiFiBeenSetup().ok()) {
     //  et = MyWiFiMenu.connect();
@@ -365,17 +375,12 @@ libesp::Display<libesp::GC9A01> &MyApp::getDisplay() {
    return MyDisplay;
 }
 
-libesp::GUI &MyApp::getGUI() {
-	return MyGui;
-}
-
 MenuState MyMenuState;
 libesp::DisplayMessageState DMS;
 SettingMenu MySettingMenu;
 GameOfLife GOL;
 Menu3D Menu3DRender( uint8_t(float(MyApp::FRAME_BUFFER_WIDTH)*0.8f) , uint8_t(float(MyApp::FRAME_BUFFER_HEIGHT)*0.8f));
 BadgeTest BadgeTestMenu;
-MainNav MainNavMenu;
 ConnectionDetails MyConDetails;
 UpdateMenu MyUpdateMenu;
 PairMenu MyPairMenu;
@@ -421,10 +426,6 @@ WiFiMenu *MyApp::getWiFiMenu() {
 
 BadgeTest *MyApp::getBadgeTest() {
    return &BadgeTestMenu;
-}
-
-MainNav *MyApp::getMainNavMap() {
-   return &MainNavMenu;
 }
 
 libesp::OTA &MyApp::getOTA() {

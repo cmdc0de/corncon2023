@@ -7,7 +7,6 @@
 #include "setting_menu.h"
 #include "game_of_life.h"
 #include "badge_test.h"
-#include "main_nav.h"
 #include "wifi_menu.h"
 #include "connection_details.h"
 //#include "high_score.h"

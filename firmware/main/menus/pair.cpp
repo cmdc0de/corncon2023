@@ -271,7 +271,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
                   } 
                }
                break;
-            case PIN_NUM_JUMP_BTN:
+            case PIN_NUM_LEFT_BTN:
                if(ENTER_PCODE==IState) {
                   PCode[Position]={'\0'};
                   IState = SEND_PAIR2;
@@ -374,7 +374,7 @@ BaseMenu::ReturnStateContext PairMenu::onRun() {
          }
          break;
    }
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
    if(IState==ENTER_PCODE) {
       //VB.draw(MyApp::get().getDisplay(),50,100);
    }

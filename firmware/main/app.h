@@ -4,9 +4,7 @@
  * Author: cmdc0de
  */
 
-#ifndef CORNCON22_APP_H
-#define CORNCON22_APP_H
-
+#pragma once
 #include <device/display/GC9A01.h>
 #include <device/display/display.h>
 #include <error_type.h>
@@ -20,18 +18,18 @@
 #include "appconfig.h"
 
 namespace libesp {
-class GUI;
-class DisplayDevice;
-class DisplayMessageState;
-class OTA;
+
+   template class Display<GC9A01>;
+   class DisplayMessageState;
+   class OTA;
 };
+
 
 class MenuState;
 class GameOfLife;
 class Menu3D;
 class SettingMenu;
 class BadgeTest;
-class MainNav;
 class WiFiMenu;
 class ConnectionDetails;
 class UpdateMenu;
@@ -55,20 +53,6 @@ class MyAppMsg;
 
 class MyApp : public libesp::App {
 public:
-   enum LEDS {
-      ALL_OFF = 0
-      , LEFT_ONE = 0x1
-      , LEFT_TWO = 0x2
-      , LEFT_THREE = 0x8
-      , RIGHT_ONE = 0x4
-      , RIGHT_TWO = 0x10
-      , RIGHT_THREE = 0x20
-      , ALL_ON = LEFT_ONE|LEFT_TWO|LEFT_THREE|RIGHT_ONE|RIGHT_TWO|RIGHT_THREE
-      , LEFT_ONETWO = LEFT_ONE|LEFT_TWO
-      , LEFT_ONETWOTHREE = LEFT_ONE|LEFT_TWO|LEFT_THREE
-      , RIGHT_ONETWO = RIGHT_ONE | RIGHT_TWO
-      , RIGHT_ONETWOTHREE = RIGHT_ONE|RIGHT_TWO|RIGHT_THREE
-   };
   enum MODE {
     ONE,
     TWO
@@ -101,13 +85,11 @@ public:
 	uint16_t getLastCanvasWidthPixel();
 	uint16_t getLastCanvasHeightPixel();
 	libesp::Display<libesp::GC9A01> &getDisplay();
-	libesp::GUI &getGUI();
 	MenuState *getMenuState();
 	SettingMenu *getSettingMenu();
 	GameOfLife *getGameOfLife();
 	Menu3D *getMenu3D();
    BadgeTest *getBadgeTest();
-   MainNav *getMainNavMap();
    WiFiMenu *getWiFiMenu();
    ConnectionDetails *getConnectionDetailMenu();
    UpdateMenu *getUpdateMenu();
@@ -143,6 +125,4 @@ private:
 private:
 	static MyApp mSelf;
 };
-
-#endif 
 

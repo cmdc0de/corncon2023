@@ -19,8 +19,8 @@ protected:
    void updateMenu();
 private:
 	QueueHandle_t QueueHandle;
-	libesp::GUIListData MenuList;
-	libesp::GUIListItemData Items[6];
+	libesp::DisplayGUIListData MenuList;
+	libesp::DisplayGUIListItemData Items[6];
 public:
 	static const int QUEUE_SIZE = 4;
 	static const int MSG_SIZE = sizeof(ButtonManagerEvent*);

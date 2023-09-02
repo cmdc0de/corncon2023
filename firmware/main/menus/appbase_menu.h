@@ -1,15 +1,10 @@
-#ifndef APP_BASE_MENU_H
-#define APP_BASE_MENU_H
+#pragma once
 
 #include <app/basemenu.h>
-#include <device/display/gui.h>
+#include <device/display/display_gui.h>
 #include <device/hwbutton/buttonmanager.h>
 #include <freertos.h>
 #include "../pinconfig.h"
-
-namespace libesp {
-class GUIListData;
-}
 
 class AppBaseMenu : public libesp::BaseMenu {
 public:
@@ -27,4 +22,3 @@ private:
 	static char ListBuffer[NumRows][RowLength]; //height then width
 };
 
-#endif

@@ -177,7 +177,7 @@ BaseMenu::ReturnStateContext HighScore::onRun() {
          switch(bme->getButton()) {
             case PIN_NUM_FIRE_BTN:
                break;
-            case PIN_NUM_JUMP_BTN:
+            case PIN_NUM_LEFT_BTN:
                nextState = MyApp::get().getMenuState();
                break;
             case PIN_NUM_UP_BTN:
@@ -209,7 +209,7 @@ BaseMenu::ReturnStateContext HighScore::onRun() {
          }
          break;
       case SHOW_SCORES:
-         MyApp::get().getGUI().drawList(&this->MenuList);
+         MyApp::get().getDisplay().drawList(&this->MenuList);
          break;
    }
 	return ReturnStateContext(nextState);

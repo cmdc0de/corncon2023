@@ -28,8 +28,8 @@ protected:
 	void line(int x0, int y0, int x1, int y1, libesp::RGBColor& color);
 private:
 	Model model;
-  libesp::Vec3f light_dir;
-  libesp::Vec3f eye;
+   libesp::Vec3f light_dir;
+   libesp::Vec3f eye;
 	static const libesp::Vec3f center;
 	static const libesp::Vec3f up;
 	uint8_t CanvasWidth;

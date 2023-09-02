@@ -86,7 +86,7 @@ ErrorType ConnectionDetails::onInit() {
    MenuList.selectTop();
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
    updateMenu();
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(QueueHandle);
 	return ErrorType();
 }
@@ -109,7 +109,7 @@ BaseMenu::ReturnStateContext ConnectionDetails::onRun() {
                   }
                }
                break;
-            case PIN_NUM_JUMP_BTN:
+            case PIN_NUM_LEFT_BTN:
                nextState = MyApp::get().getMenuState();
                break;
             case PIN_NUM_UP_BTN:
@@ -125,7 +125,7 @@ BaseMenu::ReturnStateContext ConnectionDetails::onRun() {
       delete bme;
    }
    updateMenu();
-   MyApp::get().getGUI().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
 	return ReturnStateContext(nextState);
 }
 

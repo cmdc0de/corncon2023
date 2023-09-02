@@ -9,10 +9,9 @@
 #define LIBESP_GUI_LIST_PROCESSOR_H_
 
 #include <stdint.h>
-#include <math/point.h>
 
 namespace libesp {
-	class GUIListData;
+	class DisplayGUIListData;
 }
 
 class GUIListProcessor {
@@ -23,7 +22,7 @@ public:
 	static const int32_t NO_GUI_ITEM_HIT = 0;
 	static const int32_t GUI_ITEM_HIT = 1;
 	static const int32_t GUI_HEADER_HIT = 2;
-	static int32_t process(libesp::GUIListData *pl, uint16_t itemC);
+	static int32_t process(libesp::DisplayGUIListData *pl, uint16_t itemC);
 };
 
 

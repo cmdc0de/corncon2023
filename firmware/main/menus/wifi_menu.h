@@ -69,8 +69,8 @@ private:
    uint16_t    ReTryCount;
    char        TimeZone[32];
    INTERNAL_STATE InternalState;
-	libesp::GUIListItemData Items[12];
-	libesp::GUIListData MenuList;
+	libesp::DisplayGUIListItemData Items[12];
+	libesp::DisplayGUIListData MenuList;
 	QueueHandle_t InternalQueueHandler;
    VKeyboard VB;
    char WiFiPassword[libesp::WiFi::PASSWDTYPE::MAX_SIZE];

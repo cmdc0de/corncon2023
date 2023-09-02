@@ -147,7 +147,7 @@ BaseMenu* WiFiMenu::processScanList(ButtonManagerEvent *bme) {
             displaySingleSid();
             //VB.draw(MyApp::get().getDisplay(),50, 80);
          break;
-         case PIN_NUM_JUMP_BTN:
+         case PIN_NUM_LEFT_BTN:
             nextState = MyApp::get().getMenuState();
          default:
          break;

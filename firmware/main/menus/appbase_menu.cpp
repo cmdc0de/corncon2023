@@ -1,14 +1,7 @@
 
 #include "appbase_menu.h"
-#include "device/touch/XPT2046.h"
-#include "math/point.h"
 #include "../app.h"
-//#include "calibration_menu.h"
-#include "gui_list_processor.h"
 #include <esp_log.h>
-
-using libesp::TouchNotification;
-using libesp::Point2Ds;
 
 const char *AppBaseMenu::LOGTAG = "AppBaseMenu";
 

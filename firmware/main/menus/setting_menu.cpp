@@ -312,7 +312,7 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
                break;
             }
             */
-            case PIN_NUM_JUMP_BTN:
+            case PIN_NUM_RIGHT_BTN:
             {
                switch(State) {
                case INIT:

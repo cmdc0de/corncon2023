@@ -78,7 +78,7 @@ BaseMenu::ReturnStateContext Menu3D::onRun() {
    ButtonManagerEvent *bme = nullptr;
 	if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       switch(bme->getButton()) {
-         case PIN_NUM_JUMP_BTN:
+         case PIN_NUM_FIRE_BTN:
             nextState = MyApp::get().getMenuState();
             break;
          default:
