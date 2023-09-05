@@ -256,6 +256,7 @@ libesp::ErrorType MyApp::onInit() {
 		ESP_LOGI(LOGTAG,"display init OK");
 		getDisplay().fillScreen(libesp::RGBColor::BLACK);
 		getDisplay().swap();
+#if 0
 		ESP_LOGI(LOGTAG,"******************black");
       for(int i=0;i<239;++i) {
          getDisplay().drawHorizontalLine(0  , i, 239, RGBColor::WHITE);
@@ -278,6 +279,7 @@ libesp::ErrorType MyApp::onInit() {
       getDisplay().drawHorizontalLine(0  , 120, 240, RGBColor::WHITE);
 		getDisplay().swap();
 		vTaskDelay(2000 / portTICK_RATE_MS);
+#endif
 		getDisplay().drawString(70,80,"CornCorn '23",libesp::RGBColor::GREEN, libesp::RGBColor::BLACK,1,false);
 		getDisplay().swap();
 		ESP_LOGI(LOGTAG,"string");
@@ -294,9 +296,8 @@ libesp::ErrorType MyApp::onInit() {
     //  et = MyWiFiMenu.connect();
   //		setCurrentMenu(getMenuState());
    //} else {
-      ESP_LOGI(LOGTAG,"Wifi config not set");
-      //setCurrentMenu(getMenuState());
-      setCurrentMenu(getBadgeTest());
+      //ESP_LOGI(LOGTAG,"Wifi config not set");
+      setCurrentMenu(getMenuState());
    //}
 
    return et;

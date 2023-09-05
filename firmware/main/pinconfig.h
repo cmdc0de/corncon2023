@@ -8,10 +8,19 @@
 #define PIN_NUM_BTN_4				GPIO_NUM_33
 #define PIN_NUM_BTN_5				GPIO_NUM_25
 
+#define PIN_NUM_TR_BTN          PIN_NUM_BTN_2
+#define PIN_NUM_TL_BTN          PIN_NUM_BTN_1
+#define PIN_NUM_BR_BTN          PIN_NUM_BTN_4
+#define PIN_NUM_BL_BTN          PIN_NUM_BTN_5
+#define PIN_NUM_BOT_BTN         PIN_NUM_BTN_3
+
+#define PIN_NUM_SELECT_BTN      PIN_NUM_BTN_4
+
+
 #define PIN_NUM_UP_BTN           PIN_NUM_BTN_1
-#define PIN_NUM_DOWN_BTN         PIN_NUM_BTN_2
-#define PIN_NUM_LEFT_BTN         PIN_NUM_BTN_3
+#define PIN_NUM_LEFT_BTN         PIN_NUM_BTN_2
 #define PIN_NUM_RIGHT_BTN        PIN_NUM_BTN_4
+#define PIN_NUM_DOWN_BTN         PIN_NUM_BTN_3
 #define PIN_NUM_FIRE_BTN         PIN_NUM_BTN_5
 
 //display
