@@ -4,8 +4,7 @@
  *      Author: cmdc0de
  */
 
-#ifndef SETTING_STATE_H_
-#define SETTING_STATE_H_
+#pragma once
 
 #include "appbase_menu.h"
 #include <device/display/layout.h>
@@ -41,4 +40,3 @@ public:
 };
 
 
-#endif 

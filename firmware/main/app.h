@@ -33,7 +33,6 @@ class BadgeTest;
 class WiFiMenu;
 class ConnectionDetails;
 class UpdateMenu;
-class PairMenu;
 class SleepMenu;
 
 enum ERRORS {
@@ -78,13 +77,14 @@ public:
 	static const uint32_t ESP_INTR_FLAG_DEFAULT= 0;
 
 	static MyApp &get();
+   typedef libesp::Display<libesp::GC9A01> AppDisplayType;
 public:
 	virtual ~MyApp();
 	uint16_t getCanvasWidth();
 	uint16_t getCanvasHeight();
 	uint16_t getLastCanvasWidthPixel();
 	uint16_t getLastCanvasHeightPixel();
-	libesp::Display<libesp::GC9A01> &getDisplay();
+	AppDisplayType &getDisplay();
 	MenuState *getMenuState();
 	SettingMenu *getSettingMenu();
 	GameOfLife *getGameOfLife();
@@ -93,7 +93,6 @@ public:
    WiFiMenu *getWiFiMenu();
    ConnectionDetails *getConnectionDetailMenu();
    UpdateMenu *getUpdateMenu();
-   PairMenu *getPairMenu();
    libesp::OTA &getOTA();
    SleepMenu *getSleepMenu();
 

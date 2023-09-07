@@ -1,9 +1,10 @@
 #pragma once
 
 #include <error_type.h>
+#include "app.h"
 
 namespace libesp {
-   class DisplayDevice;
+   template<typename DisplayDT> class Display;
 }
 
 class VKeyboard {
@@ -17,7 +18,7 @@ public:
    void moveRight();
    void moveLeft();
    void reset();
-   libesp::ErrorType draw(libesp::DisplayDevice& d, uint16_t x, uint16_t y);
+   libesp::ErrorType draw(MyApp::AppDisplayType& d, uint16_t x, uint16_t y);
    char getSelection();
 private:
    uint16_t Position;

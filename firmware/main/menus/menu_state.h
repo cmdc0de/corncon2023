@@ -1,5 +1,4 @@
-#ifndef MENU_STATE_H
-#define MENU_STATE_H
+#pragma once
 
 #include "appbase_menu.h"
 #include <device/display/layout.h>
@@ -22,4 +21,3 @@ private:
 	static const uint16_t ItemCount = uint16_t(sizeof(Items) / sizeof(Items[0]));
 };
 
-#endif

@@ -14,8 +14,6 @@ set(srcs "./app.cpp"
   "./menus/wifi_menu.cpp"
   "./menus/connection_details.cpp"
   "./menus/update_menu.cpp"
-  "./menus/high_score.cpp"
-  "./menus/pair.cpp"
   "./menus/sleep_menu.cpp"
 )
 

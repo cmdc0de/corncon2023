@@ -97,7 +97,7 @@ ErrorType SettingMenu::onInit() {
    Items[7].text = getRow(7);
 
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
-  // MyApp::get().getGUI().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(QueueHandle);
    State = INIT;
 	return ErrorType();
@@ -174,7 +174,6 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
 	BaseMenu *nextState = this;
    ButtonManagerEvent *bme = nullptr;
 	if(xQueueReceive(QueueHandle, &bme, 0)) {
-		//ESP_LOGI(LOGTAG,"que");
       if(bme->wasReleased()) {
          switch(bme->getButton()) {
             case PIN_NUM_FIRE_BTN:
@@ -259,7 +258,6 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
                      sprintf(getRow(4),"TZ: %s", getTZ(TZPos));
                      break;
                   case ENTER_NAME:
-                     ///ESP_LOGI(LOGTAG,"HERE");
                      if(Position>=1) --Position;
                      Name[Position]='\0';
                      sprintf(getRow(0),"Name: %s", &Name[0]);
@@ -376,9 +374,9 @@ BaseMenu::ReturnStateContext SettingMenu::onRun() {
       }
       delete bme;
    }
-   //MyApp::get().getGUI().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
    if(State!=INIT && State!=ENTER_BOOL && State!=ENTER_TZ) {
-      //VB.draw(MyApp::get().getDisplay(),50, 100);
+      VB.draw(MyApp::get().getDisplay(),50, 100);
    }
 
 	return ReturnStateContext(nextState);

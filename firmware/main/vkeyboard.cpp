@@ -3,7 +3,6 @@
 #include <device/display/display_device.h>
 #include "app.h"
 
-//static constexpr const char *K1 ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*123456789";
 static const char *LOGTAG = "VKeyBoard";
 
 VKeyboard::VKeyboard() : Position(0), KeyBoard(0), SizeOfKeyBoard(0)
@@ -35,7 +34,7 @@ void VKeyboard::reset() {
    Position = 0;
 }
 
-libesp::ErrorType VKeyboard::draw(libesp::DisplayDevice &d, uint16_t x, uint16_t y) {
+libesp::ErrorType VKeyboard::draw(MyApp::AppDisplayType &d, uint16_t x, uint16_t y) {
    libesp::ErrorType et;
    uint16_t half = NumToDraw/2;
    uint16_t width = d.getFont()->FontWidth*half;

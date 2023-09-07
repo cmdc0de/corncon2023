@@ -9,7 +9,6 @@
 #include "badge_test.h"
 #include "wifi_menu.h"
 #include "connection_details.h"
-#include "pair.h"
 #include "menu3d.h"
 #include "sleep_menu.h"
 
@@ -31,8 +30,7 @@ MenuState::~MenuState() {
 }
 
 ErrorType MenuState::onInit() {
-   //MyApp::get().setLEDs(MyApp::LEDS::ALL_OFF);
-	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
+   MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
    Items[0].id = 0;
 	if (MyApp::get().getConfig().isNameSet()) {
 		Items[0].text = (const char *) "Settings";
@@ -47,17 +45,17 @@ ErrorType MenuState::onInit() {
 	Items[3].text = (const char *) "3D Cube";
 	Items[4].id = 4;
 	Items[4].text = (const char *) "Simnon Says: multiplayer";
-  Items[5].id = 5; 
-  Items[5].text = "Simon Says: Solo"; 
-  Items[6].id = 6; 
-  if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)"; 
-  else Items[6].text = (const char *) "WiFi (NOT Connected)"; 
-  Items[7].id = 7;
-  Items[7].text = "Connection Details";
-  Items[8].id = 8;
-  Items[8].text = "Sleep";
-  MyApp::get().getDisplay().drawList(&this->MenuList);
-  MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
+   Items[5].id = 5; 
+   Items[5].text = "Simon Says: Solo"; 
+   Items[6].id = 6; 
+   if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)"; 
+   else Items[6].text = (const char *) "WiFi (NOT Connected)"; 
+   Items[7].id = 7;
+   Items[7].text = "Connection Details";
+   Items[8].id = 8;
+   Items[8].text = "Sleep";
+   MyApp::get().getDisplay().drawList(&this->MenuList);
+   MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
 	return ErrorType();
 }
 
@@ -86,42 +84,41 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
     }
 	}
 
-  if(wasFireBtnReleased) {
-    switch (MenuList.selectedItem) {
-    case 0:
-      nextState = MyApp::get().getSettingMenu();
+   if(wasFireBtnReleased) {
+      switch (MenuList.selectedItem) {
+      case 0:
+         nextState = MyApp::get().getSettingMenu();
       break;
-    case 1:
-      //nextState = MyApp::get().getGameOfLife();
+      case 1:
+         nextState = MyApp::get().getGameOfLife();
       break;
-    case 2:
-      nextState = MyApp::get().getBadgeTest();
+      case 2:
+         nextState = MyApp::get().getBadgeTest();
       break;
-    case 3:
-      //nextState = MyApp::get().getMenu3D();
+      case 3:
+         nextState = MyApp::get().getMenu3D();
       break;
-    case 4:
-      //nextState = MyApp::get().getPacman();
-      //nextState = MyApp::get().getInvaders();
+      case 4:
+         //nextState = MyApp::get().getSimonSays();
       break;
-    case 5:
-      //nextState = MyApp::get().getHighScores();
+      case 5:
+         //nextState = MyApp::get().getSimonSays();
       break;
-    case 6:
-      //nextState = MyApp::get().getWiFiMenu();
+      case 6:
+         nextState = MyApp::get().getWiFiMenu();
       break;
-    case 7:
-      //nextState = MyApp::get().getConnectionDetailMenu();
+      case 7:
+         nextState = MyApp::get().getConnectionDetailMenu();
       break;
-    case 8:
-         //nextState = MyApp::get().getSleepMenu();
-         break;
-    }
-  }
-  if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)";
-  else Items[6].text = (const char *) "WiFi (NOT Connected)";
+      case 8:
+         nextState = MyApp::get().getSleepMenu();
+      break;
+      }
+   }
+   if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)";
+   else Items[6].text = (const char *) "WiFi (NOT Connected)";
     
-  MyApp::get().getDisplay().drawList(&this->MenuList);
+   MyApp::get().getDisplay().drawList(&this->MenuList);
 	return BaseMenu::ReturnStateContext(nextState);
 }
 

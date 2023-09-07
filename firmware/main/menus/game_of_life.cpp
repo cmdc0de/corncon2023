@@ -56,7 +56,7 @@ libesp::BaseMenu::ReturnStateContext GameOfLife::onRun() {
 	      }
 		   break;
 	   case MESSAGE:
-		   MyApp::get().getDisplay().drawString(0, 10, &UtilityBuf[0], RGBColor::BLACK, RGBColor::WHITE, 1, true);
+		   MyApp::get().getDisplay().drawString(20, 110, &UtilityBuf[0], RGBColor::BLACK, RGBColor::WHITE, 1, true);
 		   InternalState = TIME_WAIT;
 		   break;
 	   case TIME_WAIT:
@@ -140,6 +140,7 @@ void GameOfLife::initGame() {
 	DisplayMessageUntil = FreeRTOS::getTimeSinceStart() + 2500;
 	sprintf(&UtilityBuf[0], "  Max\n  Generations: %d", Generations);
 }
+
 //The life function is the most important function in the program.
 //It counts the number of cells surrounding the center cell, and
 //determines whether it lives, dies, or stays the same.

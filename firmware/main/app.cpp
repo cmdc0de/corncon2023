@@ -39,7 +39,6 @@
 #include "menus/connection_details.h"
 #include <net/ota.h>
 #include "menus/update_menu.h"
-#include "menus/pair.h"
 #include "menus/sleep_menu.h"
 #include <esp_partition.h>
 
@@ -372,7 +371,7 @@ uint16_t MyApp::getLastCanvasHeightPixel() {
 	return getCanvasHeight()-1;
 }
 
-libesp::Display<libesp::GC9A01> &MyApp::getDisplay() {
+MyApp::AppDisplayType &MyApp::getDisplay() {
    return MyDisplay;
 }
 
@@ -384,17 +383,12 @@ Menu3D Menu3DRender( uint8_t(float(MyApp::FRAME_BUFFER_WIDTH)*0.8f) , uint8_t(fl
 BadgeTest BadgeTestMenu;
 ConnectionDetails MyConDetails;
 UpdateMenu MyUpdateMenu;
-PairMenu MyPairMenu;
 SleepMenu MySleepMenu;
 
 SleepMenu *MyApp::getSleepMenu() {
    return &MySleepMenu;
 }
 
-
-PairMenu *MyApp::getPairMenu() {
-   return &MyPairMenu;
-}
 
 UpdateMenu *MyApp::getUpdateMenu() {
    return &MyUpdateMenu;
