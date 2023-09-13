@@ -432,7 +432,7 @@ DisplayMessageState *MyApp::getDisplayMessageState(BaseMenu *bm, const char *msg
 	DMS.setMessage(msg);
 	DMS.setNextState(bm);
 	DMS.setTimeInState(msDisplay);
-	//DMS.setDisplay(&Display);
+	DMS.setDisplay(&MyDisplay);
 	return &DMS;
 }
 

@@ -29,7 +29,7 @@ private:
 	QueueHandle_t QueueHandle;
    INTERNAL_STATE InternalState;
 	libesp::DisplayGUIListData MenuList;
-	libesp::DisplayGUIListItemData Items[8];
+	libesp::DisplayGUIListItemData Items[4];
    char Name[AppConfig::MAX_NAME_LENGTH];
    uint8_t Position;
 public:

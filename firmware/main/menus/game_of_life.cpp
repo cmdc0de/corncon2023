@@ -56,7 +56,7 @@ libesp::BaseMenu::ReturnStateContext GameOfLife::onRun() {
 	      }
 		   break;
 	   case MESSAGE:
-		   MyApp::get().getDisplay().drawString(20, 110, &UtilityBuf[0], RGBColor::BLACK, RGBColor::WHITE, 1, true);
+		   MyApp::get().getDisplay().drawString(40, 110, &UtilityBuf[0], RGBColor::BLACK, RGBColor::WHITE, 1, true);
 		   InternalState = TIME_WAIT;
 		   break;
 	   case TIME_WAIT:
@@ -86,7 +86,7 @@ libesp::BaseMenu::ReturnStateContext GameOfLife::onRun() {
 				   }
 			   }
 			   if (0 == count) {
-				   sprintf(&UtilityBuf[0], "   ALL DEAD\n   After %d\n   generations", CurrentGeneration);
+				   sprintf(&UtilityBuf[0], "ALL DEAD  After %d generations", CurrentGeneration);
 				   CurrentGeneration = Generations + 1;
 				   InternalState = MESSAGE;
 				   DisplayMessageUntil = FreeRTOS::getTimeSinceStart() + 3000;
@@ -138,7 +138,7 @@ void GameOfLife::initGame() {
 	Generations = 100 + (rand() % 75);
 	InternalState = MESSAGE;
 	DisplayMessageUntil = FreeRTOS::getTimeSinceStart() + 2500;
-	sprintf(&UtilityBuf[0], "  Max\n  Generations: %d", Generations);
+	sprintf(&UtilityBuf[0], " Max Generations: %d", Generations);
 }
 
 //The life function is the most important function in the program.
