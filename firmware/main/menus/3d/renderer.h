@@ -36,6 +36,8 @@ public:
 	const libesp::Matrix &getModelTransform() const {return ModelTransform;}
 	void setTransformation(float t) {ModelTransform.setRotation(t);}
 	void scale(float t) {ModelTransform.scale(t);}
+	void translateX(float x) {ModelTransform.translateX(x);}
+	void translateY(float y) {ModelTransform.translateY(y);}
 private:
 	const VertexStruct *Verts;
 	uint16_t NumVerts;

@@ -66,10 +66,12 @@ ErrorType Menu3D::onInit() {
 
 void Menu3D::initMenu3d() {
 	lookat(eye, center, up);
-	viewport((CanvasWidth / 8), (CanvasHeight / 8), CanvasWidth * 0.8, CanvasHeight * 0.8);
+	viewport((CanvasWidth / 8), (CanvasHeight / 8), CanvasWidth * 0.7, CanvasHeight * 0.7);
 	projection(-1.f / (eye - center).norm());
 	light_dir.normalize();
-	model.scale(.75);
+	model.scale(.70);
+	model.translateX(0.25f);
+	model.translateY(-0.25f);
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
 }
 
@@ -78,10 +80,8 @@ BaseMenu::ReturnStateContext Menu3D::onRun() {
    ButtonManagerEvent *bme = nullptr;
 	if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       switch(bme->getButton()) {
-         case PIN_NUM_FIRE_BTN:
-            nextState = MyApp::get().getMenuState();
-            break;
          default:
+		      if(bme->wasReleased()) nextState = MyApp::get().getMenuState();
             break;
       }
       delete bme;
@@ -145,6 +145,7 @@ void Menu3D::line(int x0, int y0, int x1, int y1, RGBColor& color) {
 
 static uint32_t LastColorChange = 0;
 static RGBColor LastColor = RGBColor::WHITE;
+static char buf[24];
 
 void Menu3D::render() {
 	MyApp::get().getDisplay().fillRec(0, 0,CanvasWidth,CanvasHeight,RGBColor::BLACK);
@@ -170,12 +171,11 @@ void Menu3D::render() {
 		}
 	}
 	if (FreeRTOS::getTimeSinceStart() - renderTime > 1000) {
-		char buf[24];
 		sprintf(&buf[0], "FPS: %u:%u", count, total_frames);
-		MyApp::get().getDisplay().drawString(0, MyApp::get().getLastCanvasHeightPixel()-12, &buf[0]);
 		count = 0;
 		renderTime = FreeRTOS::getTimeSinceStart();
 	}
+   MyApp::get().getDisplay().drawString(70, 180, &buf[0]);
 	++count;
 	total_frames++;
 }
