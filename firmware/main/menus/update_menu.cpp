@@ -87,9 +87,9 @@ protected:
             sprintf(&buffer2[0], "Downloaded: %s", this->getDownloadVersion());
             break;
       }
-      MyApp::get().getDisplay().drawString(2,20,&buffer[0]);
-      MyApp::get().getDisplay().drawString(2,40,&buffer1[0]);
-      MyApp::get().getDisplay().drawString(2,60,&buffer2[0]);
+      MyApp::get().getDisplay().drawString(45,60,&buffer[0]);
+      MyApp::get().getDisplay().drawString(45,80,&buffer1[0]);
+      MyApp::get().getDisplay().drawString(45,100,&buffer2[0]);
       MyApp::get().getDisplay().swap();
 	   vTaskDelay(delayTime / portTICK_RATE_MS);
    }
@@ -127,9 +127,9 @@ BaseMenu::ReturnStateContext UpdateMenu::onRun() {
       char buf[64];
       sprintf(&buf[0],"Error: %s", et.toString());
 	   MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
-      MyApp::get().getDisplay().drawString(2,90,&buf[0]);
+      MyApp::get().getDisplay().drawString(45,120,&buf[0]);
       MyApp::get().getDisplay().swap();
-	   vTaskDelay(3000 / portTICK_RATE_MS);
+	   vTaskDelay(5000 / portTICK_RATE_MS);
    }
 
 	return ReturnStateContext(nextState);

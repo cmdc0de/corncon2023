@@ -22,8 +22,9 @@ void time_sync_cb(struct timeval *tv) {
 }
 
 WiFiMenu::WiFiMenu() : AppBaseMenu(), MyWiFi(), NTPTime(), Flags(0), ReTryCount(0), TimeZone()
-   , InternalState(INIT), Items()
-  , MenuList(MENUHEADER, Items, 0, 0, MyApp::get().getLastCanvasWidthPixel(), MyApp::get().getLastCanvasHeightPixel(), 0, ItemCount), InternalQueueHandler(), VB(), WiFiPassword(), Position(0) {
+                  , InternalState(INIT), Items()
+                  , MenuList(MENUHEADER, Items, 35, 40, 170, 160, 0, ItemCount)
+                  , InternalQueueHandler(), VB(), WiFiPassword(), Position(0) {
 
 	InternalQueueHandler = xQueueCreateStatic(QUEUE_SIZE,MSG_SIZE,&InternalQueueBuffer[0],&InternalQueue);
 }
@@ -46,12 +47,13 @@ ErrorType WiFiMenu::disconnect() {
 }
 
 ErrorType WiFiMenu::connect() {
-  ErrorType et = MyWiFi.connect(MyApp::get().getConfig().getWiFiSid()
-        ,MyApp::get().getConfig().getWiFiPassword(),WIFI_AUTH_OPEN);
-  if(et.ok()) {
-    Flags|=CONNECTING;
-  }
-  return et;
+   ESP_LOGI(LOGTAG,"Connecting to %s",MyApp::get().getConfig().getWiFiSid());
+   ErrorType et = MyWiFi.connect(MyApp::get().getConfig().getWiFiSid()
+      ,MyApp::get().getConfig().getWiFiPassword(),WIFI_AUTH_OPEN);
+   if(et.ok()) {
+      Flags|=CONNECTING;
+   }
+   return et;
 }
 
 bool WiFiMenu::isConnected() {
@@ -88,15 +90,18 @@ BaseMenu* WiFiMenu::scan() {
    clearListBuffer();
    ScanResults.empty();
    MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
+   MyApp::get().getDisplay().drawString(35,110, "Scanning...",RGBColor::WHITE);
+   MyApp::get().getDisplay().swap();
    MenuList.selectedItem=0;//remove selected item
    ErrorType et = MyWiFi.scan(ScanResults,false);
+   MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
    if(et.ok()) {
       //ESP_LOGI(LOGTAG,"in vector: %u", ScanResults.size());
       for(uint32_t i = 0;i<ScanResults.size() && i< NumRows;++i) {
          snprintf(getRow(i),AppBaseMenu::RowLength,"%-15.14s  %4d  %3d"
          , ScanResults[i].getSSID().c_str(), ScanResults[i].getRSSI(), ScanResults[i].getPrimary());
       }
-      //MyApp::get().getGUI().drawList(&MenuList);
+      MyApp::get().getDisplay().drawList(&MenuList);
       InternalState = SCAN_RESULTS;
    } else {
       nextState = MyApp::get().getDisplayMessageState(MyApp::get().getMenuState()
@@ -112,19 +117,19 @@ void WiFiMenu::displaySingleSid() {
    MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
    char rowBuffer[80];
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"SSID: %-22.21s", ScanResults[selectedItem].getSSID().c_str());
-   MyApp::get().getDisplay().drawString(5,10,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,40,&rowBuffer[0],RGBColor::WHITE);
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Auth: %s",  ScanResults[selectedItem].getAuthModeString());
-   MyApp::get().getDisplay().drawString(5,20,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,50,&rowBuffer[0],RGBColor::WHITE);
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"RSSI: %d", static_cast<int32_t>(ScanResults[selectedItem].getRSSI()));
-   MyApp::get().getDisplay().drawString(5,30,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,60,&rowBuffer[0],RGBColor::WHITE);
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Channel: %d", static_cast<int32_t>(ScanResults[selectedItem].getPrimary()));
-   MyApp::get().getDisplay().drawString(5,40,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,70,&rowBuffer[0],RGBColor::WHITE);
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Caps: B:%s N:%s G:%s LR:%s"
       ,ScanResults[selectedItem].isWirelessB()?"Y":"N", ScanResults[selectedItem].isWirelessN()?"Y":"N"
       ,ScanResults[selectedItem].isWirelessG()?"Y":"N", ScanResults[selectedItem].isWirelessLR()?"Y":"N");
-   MyApp::get().getDisplay().drawString(5,50,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,80,&rowBuffer[0],RGBColor::WHITE);
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Pwd: %s", &WiFiPassword[0]);
-   MyApp::get().getDisplay().drawString(5,60,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,90,&rowBuffer[0],RGBColor::WHITE);
    VB.init(VKeyboard::K1,7);
    Position = 0;
    memset(&WiFiPassword[0],0,sizeof(WiFiPassword));
@@ -135,19 +140,19 @@ BaseMenu* WiFiMenu::processScanList(ButtonManagerEvent *bme) {
    if(nullptr==bme) return nextState;
    if(bme->wasReleased())  {
       switch(bme->getButton()) {
-         case PIN_NUM_UP_BTN:
+         case PIN_NUM_TL_BTN:
             MenuList.moveUp();
-            //MyApp::get().getGUI().drawList(&MenuList);
+            MyApp::get().getDisplay().drawList(&MenuList);
          break;
-         case PIN_NUM_DOWN_BTN:
+         case PIN_NUM_BL_BTN:
             MenuList.moveDown();
-            //MyApp::get().getGUI().drawList(&MenuList);
+            MyApp::get().getDisplay().drawList(&MenuList);
          break;
-         case PIN_NUM_FIRE_BTN:
+         case PIN_NUM_SELECT_BTN:
             displaySingleSid();
-            //VB.draw(MyApp::get().getDisplay(),50, 80);
+            VB.draw(MyApp::get().getDisplay(),50, 130);
          break;
-         case PIN_NUM_LEFT_BTN:
+         case PIN_NUM_BOT_BTN:
             nextState = MyApp::get().getMenuState();
          default:
          break;
@@ -161,18 +166,16 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
    if(bme==nullptr) return nextState;
    if(bme->wasReleased()) {
       switch(bme->getButton()) {
-         case PIN_NUM_UP_BTN:
-         case PIN_NUM_DOWN_BTN:
+         case PIN_NUM_BL_BTN:
             VB.reset();
             break;
-         case PIN_NUM_LEFT_BTN:
+         case PIN_NUM_TL_BTN:
             VB.moveLeft();
             break;
-         case PIN_NUM_RIGHT_BTN:
+         case PIN_NUM_TR_BTN:
             VB.moveRight();
             break;
-            /*
-         case PIN_NUM_JUMP_BTN:
+         case PIN_NUM_BOT_BTN:
             if(WiFiPassword[0]!='\0') {
                WiFiPassword[Position] = '\0';
                ErrorType et = MyApp::get().getConfig().setWifiData(ScanResults[MenuList.selectedItem].getSSID().c_str(), &WiFiPassword[0]);
@@ -182,7 +185,7 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
                      , "WiFiConfig Saved Successfully", 2000);
             }
             break;
-         case PIN_NUM_FIRE_BTN:
+         case PIN_NUM_SELECT_BTN:
             WiFiPassword[Position] = VB.getSelection();
             if(++Position==AppConfig::PASSWDTYPE::MAX_SIZE-1) {
                WiFiPassword[Position] = '\0';
@@ -192,15 +195,14 @@ libesp::BaseMenu * WiFiMenu::handleSingleSid(ButtonManagerEvent *bme) {
                      , "Max Name Length reached, wifi config saved ", 2000);
             }
             break;
-            */
          default:
             break;
       }
    }
-   //VB.draw(MyApp::get().getDisplay(),50, 80);
+   VB.draw(MyApp::get().getDisplay(),50, 130);
    char rowBuffer[80];
    snprintf(&rowBuffer[0],sizeof(rowBuffer),"Pwd: %s", &WiFiPassword[0]);
-   MyApp::get().getDisplay().drawString(5,60,&rowBuffer[0],RGBColor::WHITE);
+   MyApp::get().getDisplay().drawString(35,90,&rowBuffer[0],RGBColor::WHITE);
    return nextState;
 }
 
@@ -212,7 +214,6 @@ libesp::BaseMenu::ReturnStateContext WiFiMenu::onRun() {
    if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       switch(InternalState) {
          case INIT:
-         //   nextState = scan();
          break;
          case SCAN_RESULTS:
             nextState = processScanList(bme);

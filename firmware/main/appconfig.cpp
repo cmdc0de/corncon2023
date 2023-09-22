@@ -9,30 +9,11 @@
 using libesp::NVS;
 using libesp::ErrorType;
 
-int32_t getBadgeColor() {
-   const esp_partition_t *partition = esp_partition_find_first((esp_partition_type_t)0xFD, ESP_PARTITION_SUBTYPE_ANY, "storage");
-   if(partition) {
-      int32_t read_data = -1;
-      esp_partition_read(partition, 0, &read_data, sizeof(read_data));
-      ESP_LOGI("badge COLOR","********************: %d",read_data);
-      return read_data;
-   } else {
-      ESP_LOGE("FAIL","FAILED TO OPEN PARITION");
-   }
-   return -1;
-}
-
-AppConfig::AppConfig(libesp::NVS *s) :
-   Storage(s), Name(), SleepTime(2), Flags(0), TimeZone(), PairedBadgeColors()
-   , MyBadgeColor(BadgeColor::WHITE) {
-
+AppConfig::AppConfig(libesp::NVS *s) : Storage(s), Name(), SleepTime(2), Flags(0), TimeZone() {
    LedEnabled= 1;
    memset(&Name[0],0,sizeof(Name));
    memset(&TimeZone[0],0,sizeof(TimeZone));
    strcpy(&TimeZone[0],"UTC");
-   for(int i=0;i<BadgeColor::TOTAL_COLORS;++i) {
-      PairedBadgeColors[i] = false;
-   }
 }
 
 
@@ -47,29 +28,8 @@ void espsettz(const char *niceTZ) {
    ESP_LOGI("espsettz","Timezone set to %s: %s", niceTZ, esptz);
 }
 
-const char *BadgeColorStr[BadgeColor::TOTAL_COLORS] = {
-   "BLACK"
-   , "RED"
-   , "WHITE"
-   , "BLUE"
-   , "PURPLE"
-   , "GREEN"
-};
-
-const char *AppConfig::getMyBadgeColorStr() const {
-   return BadgeColorStr[MyBadgeColor];
-}
-
-const char *AppConfig::getBadgeColorStr(const BadgeColor &bc) const {
-   if(bc<BadgeColor::TOTAL_COLORS) {
-      return BadgeColorStr[bc];
-   }
-   return getMyBadgeColorStr();
-}
-
 libesp::ErrorType AppConfig::init() {
    ErrorType et;
-   MyBadgeColor = (BadgeColor)getBadgeColor();
    {
       uint32_t len = static_cast<uint32_t>(sizeof(Name));
       et = Storage->getValue(NAME_KEY,&Name[0],len);
@@ -90,47 +50,10 @@ libesp::ErrorType AppConfig::init() {
          ESP_LOGI(LOGTAG,"Failed to load TZ %s", et.toString());
       }
       espsettz(&TimeZone[0]);
-      len = static_cast<uint32_t>(sizeof(PairedBadgeColors));
-      et = Storage->getBlob(PAIRED_BADGES, &PairedBadgeColors[0], len);
-      if(!et.ok()) {
-         ESP_LOGI(LOGTAG,"Failed to load Paired %s", et.toString());
-      }
-      PairedBadgeColors[MyBadgeColor] = true;
-      //dump Paried bades
-      for(int i=0;i<BadgeColor::TOTAL_COLORS;++i) {
-         ESP_LOGI(LOGTAG,"Badge Color: %s. Paired wtih: %s",getBadgeColorStr(BadgeColor(i)),
-               PairedBadgeColors[i]?"YES":"NO");
-      }
    }
    return et;
 }
    
-libesp::ErrorType AppConfig::setPairedColor(const char *bid, const char * bname, const char *pcode
-      , const BadgeColor &bc) {
-   ErrorType et;
-   ESP_LOGI(LOGTAG,"bid = %s, bname = %s, pcode = %s, color= %s", bid, bname, pcode, getBadgeColorStr(bc));
-   if(bc<TOTAL_COLORS) {
-      PairedBadgeColors[bc] = true;
-      et = Storage->setBlob(PAIRED_BADGES, &PairedBadgeColors[0], sizeof(PairedBadgeColors) );
-   }
-   return et;
-}
-
-bool AppConfig::isPariedWithColor(const BadgeColor &bc) {
-   if(bc<TOTAL_COLORS) {
-      return PairedBadgeColors[bc];
-   }
-   return false;
-}
-
-uint16_t AppConfig::getPairCount() const {
-   uint16_t c = 0;
-   for(int i=0;i<TOTAL_COLORS;++i) {
-      if(PairedBadgeColors[i]) ++c;
-   }
-   return c;
-}
-
 bool AppConfig::isRegistered() {
    uint16_t r = 0;
    if(Storage->getValue(REGISTRATION_KEY,r).ok()) {
@@ -223,6 +146,8 @@ ErrorType AppConfig::setWifiData(const char *sid, const char *password) {
          WifiPassword = password;
          ESP_LOGI(LOGTAG,"Saving passwrd: %s",WifiPassword.c_str());
       }
+   } else {
+      ESP_LOGI(LOGTAG,"failed to save ssid: %d %s", et.getErrT(), et.toString());
    }
    return et;
 }

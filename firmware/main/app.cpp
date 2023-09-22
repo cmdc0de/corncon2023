@@ -257,30 +257,6 @@ libesp::ErrorType MyApp::onInit() {
 		ESP_LOGI(LOGTAG,"display init OK");
 		getDisplay().fillScreen(libesp::RGBColor::BLACK);
 		getDisplay().swap();
-#if 0
-		ESP_LOGI(LOGTAG,"******************black");
-      for(int i=0;i<239;++i) {
-         getDisplay().drawHorizontalLine(0  , i, 239, RGBColor::WHITE);
-		   getDisplay().swap();
-      }
-      for(int i=238;i>=0;--i) {
-         getDisplay().drawHorizontalLine(0  , i, 239, RGBColor::RED);
-		   getDisplay().swap();
-      }
-		vTaskDelay(1000 / portTICK_RATE_MS);
-		getDisplay().fillScreen(libesp::RGBColor::BLACK);
-		getDisplay().swap();
-      getDisplay().fillRec(40, 100, 180, 20, RGBColor::GREEN);
-      getDisplay().fillRec(40, 130, 60, 20, RGBColor::BLUE);
-		getDisplay().swap();
-		ESP_LOGI(LOGTAG,"******************rec done do lines");
-		vTaskDelay(2000 / portTICK_RATE_MS);
-		getDisplay().fillScreen(libesp::RGBColor::BLACK);
-      getDisplay().drawVerticalLine(120,   0, 240, RGBColor::WHITE);
-      getDisplay().drawHorizontalLine(0  , 120, 240, RGBColor::WHITE);
-		getDisplay().swap();
-		vTaskDelay(2000 / portTICK_RATE_MS);
-#endif
 		getDisplay().drawString(70,80,"CornCorn '23",libesp::RGBColor::GREEN, libesp::RGBColor::BLACK,1,false);
 		getDisplay().swap();
 		ESP_LOGI(LOGTAG,"string");
@@ -291,9 +267,10 @@ libesp::ErrorType MyApp::onInit() {
 
    ButtonMgr.init(&SButtonInfo[0],true);
 	ESP_LOGI(LOGTAG,"OnInit: Free: %u, Min %u", System::get().getFreeHeapSize(),System::get().getMinimumFreeHeapSize());
-	//vTaskDelay(2000 / portTICK_RATE_MS);
-   //MyWiFiMenu.initWiFi();
-   //if(getConfig().hasWiFiBeenSetup().ok()) {
+   MyWiFiMenu.initWiFi();
+   if(getConfig().hasWiFiBeenSetup().ok()) {
+      ESP_LOGI(LOGTAG,"Wifi config has been set up");
+   }
     //  et = MyWiFiMenu.connect();
   //		setCurrentMenu(getMenuState());
    //} else {

@@ -23,8 +23,7 @@ static uint8_t QueueBuffer[ConnectionDetails::QUEUE_SIZE*ConnectionDetails::MSG_
 const char *ConnectionDetails::LOGTAG = "ConnectionDetails";
 
 ConnectionDetails::ConnectionDetails() : AppBaseMenu(), QueueHandle(),
-	MenuList("Connection", Items, 0, 0, MyApp::get().getCanvasWidth(), MyApp::get().getCanvasHeight()
-        , 0, ItemCount) {
+	MenuList("Connection", Items, 35, 50, 155, 80, 0, ItemCount) {
 	
 	QueueHandle = xQueueCreateStatic(QUEUE_SIZE,MSG_SIZE,&QueueBuffer[0],&ButtonQueue);
 }
@@ -98,24 +97,25 @@ BaseMenu::ReturnStateContext ConnectionDetails::onRun() {
 	if(xQueueReceive(QueueHandle, &bme, 0)) {
       if(bme->wasReleased()) { 
          switch(bme->getButton()) {
-            case PIN_NUM_FIRE_BTN:
+            case PIN_NUM_SELECT_BTN:
                if(MyApp::get().getWiFiMenu()->isConnected()) {
                   if(MenuList.getSelectedItemID()==5) {
                      MyApp::get().getWiFiMenu()->disconnect();
                   }
                } else {
                   if(MenuList.getSelectedItemID()==1) {
+                     ESP_LOGI(LOGTAG,"Connecting to WiFi");
                      MyApp::get().getWiFiMenu()->connect();
                   }
                }
                break;
-            case PIN_NUM_LEFT_BTN:
+            case PIN_NUM_BOT_BTN:
                nextState = MyApp::get().getMenuState();
                break;
-            case PIN_NUM_UP_BTN:
+            case PIN_NUM_TL_BTN:
                MenuList.moveUp();
                break;
-            case PIN_NUM_DOWN_BTN:
+            case PIN_NUM_BL_BTN:
                MenuList.moveDown();
                break;
             default:
