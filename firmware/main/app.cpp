@@ -26,6 +26,7 @@
 #include "menus/setting_menu.h"
 #include "menus/menu3d.h"
 #include <app/display_message_state.h>
+#include "menus/simon_says.h"
 #include "spibus.h"
 #include "freertos.h"
 #include "fatfsvfs.h"
@@ -40,6 +41,7 @@
 #include <net/ota.h>
 #include "menus/update_menu.h"
 #include "menus/sleep_menu.h"
+#include "menus/simon_says.h"
 #include <esp_partition.h>
 
 using libesp::ErrorType;
@@ -384,6 +386,11 @@ BadgeTest BadgeTestMenu;
 ConnectionDetails MyConDetails;
 UpdateMenu MyUpdateMenu;
 SleepMenu MySleepMenu;
+SimonSaysMenu MySimonSaysMenu;
+
+SimonSaysMenu *MyApp::getSimonSaysMenu() {
+   return &MySimonSaysMenu;
+}
 
 SleepMenu *MyApp::getSleepMenu() {
    return &MySleepMenu;

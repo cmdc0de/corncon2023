@@ -30,30 +30,29 @@ MenuState::~MenuState() {
 }
 
 ErrorType MenuState::onInit() {
+   clearListBuffer();
    MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
-   Items[0].id = 0;
+   for(int i=0;i<ItemCount;++i) {
+      Items[i].id = i;
+	   Items[i].text = getRow(i);
+   }
 	if (MyApp::get().getConfig().isNameSet()) {
-		Items[0].text = (const char *) "Settings";
+      sprintf(getRow(0),"Settings");
 	} else {
-		Items[0].text = (const char *) "Settings *";
+      sprintf(getRow(0),"Settings *");
 	}
-	Items[1].id = 1;
-	Items[1].text = (const char *) "Screen Saver";
-	Items[2].id = 2;
-	Items[2].text = (const char *) "Test Badge";
-	Items[3].id = 3;
-	Items[3].text = (const char *) "3D Cube";
-	Items[4].id = 4;
-	Items[4].text = (const char *) "Simnon Says: multiplayer";
-   Items[5].id = 5; 
-   Items[5].text = "Simon Says: Solo"; 
-   Items[6].id = 6; 
-   if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)"; 
-   else Items[6].text = (const char *) "WiFi (NOT Connected)"; 
-   Items[7].id = 7;
-   Items[7].text = "Connection Details";
-   Items[8].id = 8;
-   Items[8].text = "Sleep";
+   sprintf(getRow(1), "Screen Saver");
+   sprintf(getRow(2), "Test Badge");
+   sprintf(getRow(3), "3D Cube");
+   sprintf(getRow(4), "Simnon Says: Solo");
+   sprintf(getRow(5), "Simon Says: Multiplayer"); 
+   if (MyApp::get().getWiFiMenu()->isConnected()) {
+      sprintf(getRow(6), "WiFi (Connected)"); 
+   } else {
+      sprintf(getRow(6), "WiFi (NOT Connected)"); 
+   }
+   sprintf(getRow(7), "Connection Details");
+   sprintf(getRow(8), "Sleep");
    MyApp::get().getDisplay().drawList(&this->MenuList);
    MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);
 	return ErrorType();
@@ -99,10 +98,10 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
          nextState = MyApp::get().getMenu3D();
       break;
       case 4:
-         //nextState = MyApp::get().getSimonSays();
+         nextState = MyApp::get().getSimonSaysMenu();
       break;
       case 5:
-         //nextState = MyApp::get().getSimonSays();
+         nextState = MyApp::get().getSimonSaysMenu();
       break;
       case 6:
          nextState = MyApp::get().getWiFiMenu();
@@ -115,8 +114,11 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
       break;
       }
    }
-   if (MyApp::get().getWiFiMenu()->isConnected()) Items[6].text = (const char *) "WiFi (Connected)";
-   else Items[6].text = (const char *) "WiFi (NOT Connected)";
+   if (MyApp::get().getWiFiMenu()->isConnected()) {
+      sprintf(getRow(6), "WiFi (Connected)"); 
+   } else {
+      sprintf(getRow(6), "WiFi (NOT Connected)"); 
+   }
     
    MyApp::get().getDisplay().drawList(&this->MenuList);
 	return BaseMenu::ReturnStateContext(nextState);

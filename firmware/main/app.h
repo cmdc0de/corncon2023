@@ -16,6 +16,7 @@
 #include <device/display/layout.h>
 #include <device/hwbutton/buttonmanager.h>
 #include "appconfig.h"
+#include "menus/simon_says.h"
 
 namespace libesp {
 
@@ -34,6 +35,7 @@ class WiFiMenu;
 class ConnectionDetails;
 class UpdateMenu;
 class SleepMenu;
+class SimonSaysMenu;
 
 enum ERRORS {
 	APP_OK = libesp::ErrorType::APP_OK
@@ -95,6 +97,7 @@ public:
    UpdateMenu *getUpdateMenu();
    libesp::OTA &getOTA();
    SleepMenu *getSleepMenu();
+   SimonSaysMenu *getSimonSaysMenu();
 
    AppConfig &getConfig();
 	libesp::DisplayMessageState *getDisplayMessageState(libesp::BaseMenu *, const char *msg, uint32_t msDisplay);
