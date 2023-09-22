@@ -34,6 +34,8 @@ SleepMenu::~SleepMenu() {
 
 
 ErrorType SleepMenu::onInit() {
+   MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
+   MyApp::get().getDisplay().drawString(40,100,"Sleeping",RGBColor::WHITE,RGBColor::BLACK,2,false);
    MyApp::get().goToSleep();
 	MyApp::get().getButtonMgr().addObserver(QueueHandle);
 	return ErrorType();
