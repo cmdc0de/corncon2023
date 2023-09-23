@@ -81,15 +81,16 @@ void SimonSaysMenu::drawWedge(uint8_t wedge) {
 
 void SimonSaysMenu::playSequence() {
    uint16_t count = 0;
+   int32_t delayTime = 500-(Position*10);
    for(auto i=Sequence.begin(); i!=Sequence.end() && count<=Position; ++i, ++count) {
       MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
       MyApp::get().getDisplay().swap();
-      vTaskDelay(500/portTICK_PERIOD_MS);
+      vTaskDelay(delayTime/portTICK_PERIOD_MS);
       ESP_LOGI(LOGTAG,"#%u: %u  gpio: %d\r\n", count, *i, ButtonMap[*i]);
       drawWedge(*i);
       MyApp::get().getDisplay().swap();
       gpio_set_level(MyApp::get().getLEDForButton(ButtonMap[*i]),1);
-      vTaskDelay(500/portTICK_PERIOD_MS);
+      vTaskDelay(delayTime/portTICK_PERIOD_MS);
       gpio_set_level(MyApp::get().getLEDForButton(ButtonMap[*i]),0);
    }
 }
