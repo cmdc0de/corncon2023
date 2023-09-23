@@ -16,6 +16,7 @@
 #include <device/display/layout.h>
 #include <device/hwbutton/buttonmanager.h>
 #include "appconfig.h"
+#include "hal/gpio_types.h"
 #include "menus/simon_says.h"
 
 namespace libesp {
@@ -62,6 +63,7 @@ public:
   };
 public:
    typedef typename libesp::ButtonManager<12,2,5,2> BtnManagerType;
+   static gpio_num_t LEDMap[];
 	static const char *LOGTAG;
 	static const char *MENUHEADER;
 	static const int QUEUE_SIZE = 10;
@@ -109,6 +111,8 @@ public:
    void goToSleep();
    void wakeUp();
    bool isSleeping() const {return AmISleep;}
+   gpio_num_t getLEDForButton(gpio_num_t btn) const;
+   void turnOffAllLEDs();
 protected:
 	MyApp();
    libesp::ErrorType initFS();

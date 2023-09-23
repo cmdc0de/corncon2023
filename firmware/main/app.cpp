@@ -88,6 +88,36 @@ static MyApp::BtnManagerType::ButtonInfo SButtonInfo[] = {
   ,{PIN_NUM_BTN_5,false}
 };
 
+gpio_num_t MyApp::LEDMap[] = {
+   PIN_NUM_LED_4
+   , PIN_NUM_LED_5
+   , PIN_NUM_LED_1
+   , PIN_NUM_LED_2
+   , PIN_NUM_LED_3
+};
+
+gpio_num_t MyApp::getLEDForButton(gpio_num_t btn) const {
+   switch(btn) {
+   case PIN_NUM_BOT_BTN:
+      return LEDMap[0];
+   case PIN_NUM_BL_BTN:
+      return LEDMap[1];
+   case PIN_NUM_TL_BTN:
+      return LEDMap[2];
+   case PIN_NUM_TR_BTN:
+      return LEDMap[3];
+   case PIN_NUM_BR_BTN:
+   default:
+      return LEDMap[4];
+   }
+}
+
+void MyApp::turnOffAllLEDs()  {
+   for(uint32_t i=0;i<sizeof(LEDMap)/sizeof(LEDMap[0]);i++) {
+      gpio_set_level(LEDMap[i],0);
+   }
+}
+
 MyApp &MyApp::get() {
 	return mSelf;
 }

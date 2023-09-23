@@ -56,33 +56,51 @@ libesp::BaseMenu::ReturnStateContext BadgeTest::onRun() {
 	if(xQueueReceive(InternalQueueHandler, &bme, 0)) {
       switch(bme->getButton()) {
       case PIN_NUM_TR_BTN:
-         if(bme->wasReleased()) sprintf(getRow(0),"TR: %s", OFF);
-         else sprintf(getRow(0),"TR: %s", ON);
+         if(bme->wasReleased()) {
+            sprintf(getRow(0),"TR: %s", OFF);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_TR_BTN),0);
+         } else {
+            sprintf(getRow(0),"TR: %s", ON);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_TR_BTN),1);
+         }
          break;
-      case PIN_NUM_UP_BTN:
-         if(bme->wasReleased()) sprintf(getRow(1),"TL: %s", OFF);
-         else sprintf(getRow(1),"TL: %s", ON);
+      case PIN_NUM_TL_BTN:
+         if(bme->wasReleased()) {
+            sprintf(getRow(1),"TL: %s", OFF);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_TL_BTN),0);
+         } else {
+            sprintf(getRow(1),"TL: %s", ON);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_TL_BTN),1);
+         }
          break;
       case PIN_NUM_BOT_BTN:
          if(bme->wasReleased()) {
            sprintf(getRow(2),"Bot: %s", OFF);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BOT_BTN),0);
             ExitTimer = UINT_MAX;
          } else {
            sprintf(getRow(2),"Bot: %s", ON);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BOT_BTN),1);
             ExitTimer = FreeRTOS::getTimeSinceStart();
          }
          break;
       case PIN_NUM_BR_BTN:
-      //case PIN_NUM_SELECT_BTN:
          if(bme->wasReleased()) {
             sprintf(getRow(3),"BR: %s", OFF);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BR_BTN),0);
          } else {
             sprintf(getRow(3),"BR: %s", ON);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BR_BTN),1);
          }
          break;
       case PIN_NUM_BL_BTN:
-         if(bme->wasReleased()) sprintf(getRow(4),"BL: %s", OFF);
-         else sprintf(getRow(4),"BL: %s", ON);
+         if(bme->wasReleased()) {
+            sprintf(getRow(4),"BL: %s", OFF);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BL_BTN),0);
+         } else {
+            sprintf(getRow(4),"BL: %s", ON);
+            gpio_set_level(MyApp::get().getLEDForButton(PIN_NUM_BL_BTN),1);
+         }
          break;
       default:
          break;
@@ -99,6 +117,7 @@ libesp::BaseMenu::ReturnStateContext BadgeTest::onRun() {
 
 ErrorType BadgeTest::onShutdown() {
 	MyApp::get().getButtonMgr().removeObserver(InternalQueueHandler);
+   MyApp::get().turnOffAllLEDs();
 	return ErrorType();
 }
 

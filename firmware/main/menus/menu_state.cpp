@@ -98,9 +98,11 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
          nextState = MyApp::get().getMenu3D();
       break;
       case 4:
+         MyApp::get().getSimonSaysMenu()->setMultiplayer(false);
          nextState = MyApp::get().getSimonSaysMenu();
       break;
       case 5:
+         MyApp::get().getSimonSaysMenu()->setMultiplayer(true);
          nextState = MyApp::get().getSimonSaysMenu();
       break;
       case 6:

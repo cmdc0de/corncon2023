@@ -9,7 +9,7 @@
 using libesp::NVS;
 using libesp::ErrorType;
 
-AppConfig::AppConfig(libesp::NVS *s) : Storage(s), Name(), SleepTime(2), Flags(0), TimeZone() {
+AppConfig::AppConfig(libesp::NVS *s) : Storage(s), Name(), SleepTime(5), Flags(0), TimeZone() {
    LedEnabled= 1;
    memset(&Name[0],0,sizeof(Name));
    memset(&TimeZone[0],0,sizeof(TimeZone));
