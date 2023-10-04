@@ -15,6 +15,7 @@ set(srcs "./app.cpp"
   "./menus/connection_details.cpp"
   "./menus/update_menu.cpp"
   "./menus/simon_says.cpp"
+  "./menus/simon_says_multi.cpp"
   "./menus/sleep_menu.cpp"
 )
 

@@ -37,6 +37,7 @@ class ConnectionDetails;
 class UpdateMenu;
 class SleepMenu;
 class SimonSaysMenu;
+class SimonSaysMultiMenu;
 
 enum ERRORS {
 	APP_OK = libesp::ErrorType::APP_OK
@@ -100,6 +101,7 @@ public:
    libesp::OTA &getOTA();
    SleepMenu *getSleepMenu();
    SimonSaysMenu *getSimonSaysMenu();
+   SimonSaysMultiMenu *getSimonSaysMultiMenu();
 
    AppConfig &getConfig();
 	libesp::DisplayMessageState *getDisplayMessageState(libesp::BaseMenu *, const char *msg, uint32_t msDisplay);
@@ -113,6 +115,7 @@ public:
    bool isSleeping() const {return AmISleep;}
    gpio_num_t getLEDForButton(gpio_num_t btn) const;
    void turnOffAllLEDs();
+   const char *getBadgeID() const;
 protected:
 	MyApp();
    libesp::ErrorType initFS();

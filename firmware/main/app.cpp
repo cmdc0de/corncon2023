@@ -27,6 +27,7 @@
 #include "menus/menu3d.h"
 #include <app/display_message_state.h>
 #include "menus/simon_says.h"
+#include "menus/simon_says_multi.h"
 #include "spibus.h"
 #include "freertos.h"
 #include "fatfsvfs.h"
@@ -364,6 +365,12 @@ ErrorType MyApp::onRun() {
 	return et;
 }
 
+const char *MyApp::getBadgeID() const {
+   static char id[32];
+   snprintf(id,sizeof(id),"%06d",MyWiFiMenu.getServerID());
+   return &id[0];
+}
+
 uint16_t MyApp::getCanvasWidth() {
 	return FrameBuf.getBufferWidth(); 
 }
@@ -394,9 +401,14 @@ ConnectionDetails MyConDetails;
 UpdateMenu MyUpdateMenu;
 SleepMenu MySleepMenu;
 SimonSaysMenu MySimonSaysMenu;
+SimonSaysMultiMenu MySimonSaysMultiMenu;
 
 SimonSaysMenu *MyApp::getSimonSaysMenu() {
    return &MySimonSaysMenu;
+}
+
+SimonSaysMultiMenu *MyApp::getSimonSaysMultiMenu() {
+   return &MySimonSaysMultiMenu;
 }
 
 SleepMenu *MyApp::getSleepMenu() {

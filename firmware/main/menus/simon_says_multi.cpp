@@ -4,7 +4,7 @@
  *      Author: cmdc0de
  */
 
-#include "simon_says.h"
+#include "simon_says_multi.h"
 #include <cstdint>
 #include <device/display/display.h>
 #include "device/display/color.h"
@@ -23,8 +23,8 @@ using libesp::BaseMenu;
 using libesp::RGBColor;
 
 static StaticQueue_t ButtonQueue;
-static uint8_t QueueBuffer[SimonSaysMenu::QUEUE_SIZE*SimonSaysMenu::MSG_SIZE] = {0};
-const char *SimonSaysMenu::LOGTAG = "SimonSays";
+static uint8_t QueueBuffer[SimonSaysMultiMenu::QUEUE_SIZE*SimonSaysMultiMenu::MSG_SIZE] = {0};
+const char *SimonSaysMultiMenu::LOGTAG = "SimonSaysMulti";
 
 static int32_t NumColors = 5;
 static RGBColor Colors[] = {
@@ -47,15 +47,15 @@ static gpio_num_t ButtonMap[] = {
 static const int32_t MAX_SEQUENCE = 32;
 static etl::vector<uint8_t, MAX_SEQUENCE> Sequence;
 
-SimonSaysMenu::SimonSaysMenu() : AppBaseMenu(), QueueHandle(), IState(INIT), Position(0), IsMultiplayer(false) {
+SimonSaysMultiMenu::SimonSaysMultiMenu() : AppBaseMenu(), QueueHandle(), IState(INIT), Position(0) {
 	QueueHandle = xQueueCreateStatic(QUEUE_SIZE,MSG_SIZE,&QueueBuffer[0],&ButtonQueue);
 }
 
-SimonSaysMenu::~SimonSaysMenu() {
+SimonSaysMultiMenu::~SimonSaysMultiMenu() {
 
 }
 
-void SimonSaysMenu::addColorToSequence() {
+void SimonSaysMultiMenu::addColorToSequence() {
    for(int i=0;i<MAX_SEQUENCE;++i) {
       Sequence.push_back(esp_random()%NumColors);
    }
@@ -64,7 +64,7 @@ void SimonSaysMenu::addColorToSequence() {
 const float StartingX = 120.0f;
 const float StartingY = 120.0f;
 
-void SimonSaysMenu::drawWedge(uint8_t wedge) {
+void SimonSaysMultiMenu::drawWedge(uint8_t wedge) {
    static const float angleInc = static_cast<float>(2*3.14/NumColors);
    float radius = 120.0f;
    float drawAngle = (3.14/540.0f);
@@ -79,7 +79,7 @@ void SimonSaysMenu::drawWedge(uint8_t wedge) {
    }
 }
 
-void SimonSaysMenu::playSequence() {
+void SimonSaysMultiMenu::playSequence() {
    uint16_t count = 0;
    int32_t delayTime = 500-(Position*10);
    for(auto i=Sequence.begin(); i!=Sequence.end() && count<=Position; ++i, ++count) {
@@ -95,7 +95,7 @@ void SimonSaysMenu::playSequence() {
    }
 }
 
-void SimonSaysMenu::showAll() {
+void SimonSaysMultiMenu::showAll() {
    float angleInc = static_cast<float>(2*3.14/NumColors);
    float angle = (3.14/180.0f)*75;
    float angle1Inc = (3.14/360.0f);
@@ -113,7 +113,7 @@ void SimonSaysMenu::showAll() {
 
 static uint64_t lastTime = libesp::FreeRTOS::getTimeSinceStart();
 
-ErrorType SimonSaysMenu::onInit() {
+ErrorType SimonSaysMultiMenu::onInit() {
 	MyApp::get().getDisplay().fillScreen(RGBColor::BLACK);
 	MyApp::get().getButtonMgr().addObserver(QueueHandle);
    IState = INIT;
@@ -127,7 +127,7 @@ ErrorType SimonSaysMenu::onInit() {
 
 static int16_t InputButton = -1;
 
-BaseMenu::ReturnStateContext SimonSaysMenu::onRun() {
+BaseMenu::ReturnStateContext SimonSaysMultiMenu::onRun() {
 	BaseMenu *nextState = this;
    ButtonManagerEvent *bme = nullptr;
    gpio_num_t button = GPIO_NUM_NC;
@@ -140,7 +140,7 @@ BaseMenu::ReturnStateContext SimonSaysMenu::onRun() {
       }
       delete bme;
    }
-   if(IsMultiplayer) {
+   if(true) {
       MyApp::get().getDisplay().drawString(40,100,"Simon Says",RGBColor::WHITE,RGBColor::BLACK,2,false);
       MyApp::get().getDisplay().drawString(40,120,"Update to play",RGBColor::WHITE,RGBColor::BLACK,2,false);
       MyApp::get().getDisplay().drawString(40,140,"Muliplayer!!",RGBColor::WHITE,RGBColor::BLACK,2,false);
@@ -211,7 +211,7 @@ BaseMenu::ReturnStateContext SimonSaysMenu::onRun() {
 	return ReturnStateContext(nextState);
 }
 
-ErrorType SimonSaysMenu::onShutdown() {
+ErrorType SimonSaysMultiMenu::onShutdown() {
 	MyApp::get().getButtonMgr().removeObserver(QueueHandle);
 	return ErrorType();
 }

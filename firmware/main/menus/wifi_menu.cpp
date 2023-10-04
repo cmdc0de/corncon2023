@@ -5,6 +5,7 @@
 #include <esp_event.h>
 #include <esp_wifi.h>
 #include "app/basemenu.h"
+#include "esp_random.h"
 #include "menu_state.h"
 
 using libesp::ErrorType;
@@ -24,14 +25,26 @@ void time_sync_cb(struct timeval *tv) {
 WiFiMenu::WiFiMenu() : AppBaseMenu(), MyWiFi(), NTPTime(), Flags(0), ReTryCount(0), TimeZone()
                   , InternalState(INIT), Items()
                   , MenuList(MENUHEADER, Items, 35, 40, 170, 160, 0, ItemCount)
-                  , InternalQueueHandler(), VB(), WiFiPassword(), Position(0) {
+                  , InternalQueueHandler(), VB(), WiFiPassword(), Position(0), ServerID(0) {
 
 	InternalQueueHandler = xQueueCreateStatic(QUEUE_SIZE,MSG_SIZE,&InternalQueueBuffer[0],&InternalQueue);
 }
 
 ErrorType WiFiMenu::initWiFi() {
-  MyWiFi.setWifiEventHandler(this);
-  ErrorType et = MyWiFi.init(WIFI_MODE_APSTA);
+   MyWiFi.setWifiEventHandler(this);
+   wifi_config_t apConfig;
+   ::memset(&apConfig, 0, sizeof(apConfig));
+   char sidBuffer[12];
+   ServerID  = esp_random()%100000;
+   sprintf(&sidBuffer[0],"%06d",ServerID);
+   ESP_LOGI(LOGTAG, "SSID: %s", &sidBuffer[0]);
+   ::memcpy(apConfig.ap.ssid, &sidBuffer[0], strlen(&sidBuffer[0]));
+   apConfig.ap.ssid_len = strlen(&sidBuffer[0]);
+   apConfig.ap.authmode        = WIFI_AUTH_OPEN;
+   apConfig.ap.max_connection  = 8;
+   apConfig.ap.beacon_interval = 100;
+
+  ErrorType et = MyWiFi.initAPSTA(&apConfig);
   if(et.ok()) {
     et = NTPTime.init(MyApp::get().getNVS(),true,time_sync_cb);
   }

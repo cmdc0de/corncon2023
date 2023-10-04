@@ -43,7 +43,7 @@ ErrorType BadgeTest::onInit() {
    sprintf(getRow(4),"BL: %s", OFF);
    sprintf(getRow(5),"Version: %s", MyApp::get().getOTA().getCurrentApplicationVersion());
    sprintf(getRow(6),"Build Date: %s", MyApp::get().getOTA().getBuildDate());
-   sprintf(getRow(7),"BadgeID: %s", "XXX");
+   sprintf(getRow(7),"BadgeID: %s", MyApp::get().getBadgeID());
    sprintf(getRow(8),"Exit hold Bot btn for 2s");
    MyApp::get().getDisplay().drawList(&this->MenuList);
 	MyApp::get().getButtonMgr().addObserver(InternalQueueHandler);

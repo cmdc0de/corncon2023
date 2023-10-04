@@ -11,6 +11,7 @@
 #include "connection_details.h"
 #include "menu3d.h"
 #include "sleep_menu.h"
+#include "simon_says_multi.h"
 
 using libesp::ErrorType;
 using libesp::BaseMenu;
@@ -102,8 +103,7 @@ libesp::BaseMenu::ReturnStateContext MenuState::onRun() {
          nextState = MyApp::get().getSimonSaysMenu();
       break;
       case 5:
-         MyApp::get().getSimonSaysMenu()->setMultiplayer(true);
-         nextState = MyApp::get().getSimonSaysMenu();
+         nextState = MyApp::get().getSimonSaysMultiMenu();
       break;
       case 6:
          nextState = MyApp::get().getWiFiMenu();

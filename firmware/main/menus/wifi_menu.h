@@ -51,6 +51,7 @@ public:
 	virtual libesp::ErrorType staGotIp(system_event_sta_got_ip_t *info);
 	virtual libesp::ErrorType staScanDone(system_event_sta_scan_done_t *info);
 	virtual libesp::ErrorType staAuthChange(system_event_sta_authmode_change_t *info);
+   int32_t getServerID() const {return ServerID;}
 protected:
    bool isFlagSet(uint32_t f) {return ((f&Flags)!=0);}
    libesp::ErrorType setWiFiConnectionData(const char *ssid, const char *pass);
@@ -75,6 +76,7 @@ private:
    VKeyboard VB;
    char WiFiPassword[libesp::WiFi::PASSWDTYPE::MAX_SIZE];
    uint16_t Position;
+   int32_t ServerID;
 	static const uint16_t ItemCount = uint16_t(sizeof(Items) / sizeof(Items[0]));
 };
 
