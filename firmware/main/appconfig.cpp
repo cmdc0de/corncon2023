@@ -40,6 +40,10 @@ libesp::ErrorType AppConfig::init() {
       if(!et.ok()) {
          ESP_LOGI(LOGTAG,"Failed to load sleep time %s", et.toString());
       }
+      //ensure the value is > 0
+      if(SleepTime<1) {
+         SleepTime = 1;
+      }
       et = Storage->getValue(FLAGS_KEY,Flags);
       if(!et.ok()) {
          ESP_LOGI(LOGTAG,"Failed to load light enable %s", et.toString());

@@ -20,9 +20,8 @@ set(srcs "./app.cpp"
 )
 
 idf_component_register(SRCS "${srcs}"
-		INCLUDE_DIRS ../components/esp-etl/etl/include/ ../components/libesp
+   INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../components/esp-etl/etl/include/ ../components/libesp
 		)
 
-#EMBED_FILES maps/mainmap.map maps/pacmanlevel1.map
 
 
