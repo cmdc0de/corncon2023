@@ -72,14 +72,14 @@ Puts the badge in a lower power mode.
 
 # Build
 
-# Setup esp-idf per: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html
-# once complete cd into the esp-idf directory and check out version v4.4
-# you will need to re-run the install.sh script to ensure you have to coorect version of the compiler, etc.
-# then cd into the firmware directory
-# type make - this will build the firmware
-# connect a USB cable from the badge to your computer (on linux, ensure the badge get's registered as /dev/ttyUSB0
-# if it doesn't you'll need to tweak the makefile to use the correct device, or if you're not building on linux you'll need to use the appropriate serial device (EG: on windows it'll be a COM port)
-# type make fm - this will flash the badge over the USB cable  as well monitor so you can see debug output.
+1. Setup esp-idf per: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html
+#once complete cd into the esp-idf directory and check out version v4.4
+1. you will need to re-run the install.sh script to ensure you have to coorect version of the compiler, etc.
+1. then cd into the firmware directory
+1. type make - this will build the firmware
+1. connect a USB cable from the badge to your computer (on linux, ensure the badge get's registered as /dev/ttyUSB0
+1. if it doesn't you'll need to tweak the makefile to use the correct device, or if you're not building on linux you'll need to use the appropriate serial device (EG: on windows it'll be a COM port)
+1. type make fm - this will flash the badge over the USB cable  as well monitor so you can see debug output.
 
 
 # Issues
