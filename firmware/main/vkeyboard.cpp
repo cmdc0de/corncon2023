@@ -17,6 +17,7 @@ libesp::ErrorType VKeyboard::init(const char* keyBoard, uint16_t numToDraw) {
    } else {
       KeyBoard = keyBoard;
       SizeOfKeyBoard = strlen(KeyBoard);
+      ESP_LOGI(LOGTAG,"Keyboard length %d",SizeOfKeyBoard);
       Position = 0;
    }
    return et;

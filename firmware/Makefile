@@ -1,24 +1,6 @@
 build: FORCE
 	idf.py -DCMAKE_EXPORT_COMPILE_COMMANDS=1 build
 
-black: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/black.bin
-
-red: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/red.bin
-
-white: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/white.bin
-
-blue: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/blue.bin
-
-purple: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/purple.bin
-
-green: 
-	esptool.py --port /dev/ttyUSB0 write_flash 0x610000 ../software/generator/green.bin
-
 menuconfig:
 	idf.py menuconfig
 
